@@ -87,7 +87,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d' }}>
                 Harshdeep
               </Typography>
               <Typography variant="caption" sx={{ color: '#666' }}>
@@ -118,7 +118,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
                 sx={{
                   borderRadius: '8px',
                   bgcolor: isActive ? '#e3f2fd' : 'transparent',
-                  color: isActive ? '#1976d2' : '#666',
+                  color: isActive ? '#001a4d' : '#666',
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
@@ -188,7 +188,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#001a4d' }}>
                 Teacher Panel
               </Typography>
             </Box>

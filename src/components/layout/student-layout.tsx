@@ -93,7 +93,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d' }}>
                 Harshdeep
               </Typography>
               <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
@@ -146,7 +146,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                 sx={{
                   borderRadius: '10px',
                   bgcolor: isActive ? '#e3f2fd' : 'transparent',
-                  color: isActive ? '#1976d2' : '#616161',
+                  color: isActive ? '#001a4d' : '#616161',
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
@@ -155,7 +155,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
                     transform: 'translateX(2px)',
-                    color: isActive ? '#1976d2' : '#424242',
+                    color: isActive ? '#001a4d' : '#424242',
                   },
                   '&:active': {
                     transform: 'translateX(0px)',
@@ -241,11 +241,11 @@ export function StudentLayout({ children }: StudentLayoutProps) {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconButton
                 onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
-                sx={{ display: { xs: 'flex', md: 'none' }, color: '#1976d2', transition: 'all 250ms ease' }}
+                sx={{ display: { xs: 'flex', md: 'none' }, color: '#001a4d', transition: 'all 250ms ease' }}
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#001a4d' }}>
                 Student Panel
               </Typography>
             </Box>
@@ -254,7 +254,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
               <IconButton
                 onClick={handleNotificationsClick}
                 sx={{
-                  color: '#1976d2',
+                  color: '#001a4d',
                   position: 'relative',
                   transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {

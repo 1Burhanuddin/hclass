@@ -13,10 +13,11 @@ import {
   DialogActions,
   TextField,
   Chip,
-  Alert,
   CircularProgress,
   Typography,
 } from '@mui/material'
+import { useToast } from '@/hooks/useToast'
+import { ToastDisplay } from '@/components/shared/ToastDisplay'
 import { DataTable, DataCard } from '@/components/ui'
 import AddIcon from '@mui/icons-material/Add'
 
@@ -35,6 +36,8 @@ export default function UsersManagementPage() {
   const updateUserMutation = useMutation(api.users.updateUserDetails)
   const deactivateUserMutation = useMutation(api.users.deactivateUser)
   
+  const { toast, showToast, closeToast } = useToast()
+
   const [openDialog, setOpenDialog] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
@@ -43,27 +46,24 @@ export default function UsersManagementPage() {
     email: '',
     role: 'student' as 'admin' | 'teacher' | 'student',
   })
-  const [error, setError] = useState('')
   const [saveLoading, setSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
 
   const handleEditUser = (u: User) => {
     setEditingUser(u)
     setFormData({ name: u.name, email: u.email, role: u.role })
-    setError('')
     setOpenDialog(true)
   }
 
   const handleSaveUser = async () => {
     if (!editingUser) return
     if (!formData.name.trim() || !formData.email.trim()) {
-      setError('Name and email are required')
+      showToast('Name and email are required', 'error')
       return
     }
     
     try {
       setSaveLoading(true)
-      setError('')
       
       await updateUserMutation({
         userId: editingUser._id as any,
@@ -72,17 +72,17 @@ export default function UsersManagementPage() {
         role: formData.role,
       })
       
+      showToast('User updated successfully', 'success')
       setOpenDialog(false)
       setSaveLoading(false)
     } catch (err: any) {
-      setError(err.message || 'Failed to update user')
+      showToast(err.message || 'Failed to update user', 'error')
       setSaveLoading(false)
     }
   }
 
   const handleDeleteUser = (u: User) => {
     setEditingUser(u)
-    setError('')
     setOpenDeleteDialog(true)
   }
 
@@ -91,16 +91,16 @@ export default function UsersManagementPage() {
     
     try {
       setDeleteLoading(true)
-      setError('')
       
       await deactivateUserMutation({
         userId: editingUser._id as any,
       })
       
+      showToast('User deleted successfully', 'success')
       setOpenDeleteDialog(false)
       setDeleteLoading(false)
     } catch (err: any) {
-      setError(err.message || 'Failed to delete user')
+      showToast(err.message || 'Failed to delete user', 'error')
       setDeleteLoading(false)
     }
   }
@@ -184,9 +184,8 @@ export default function UsersManagementPage() {
 
       {/* Edit User Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>Edit User</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700, color: '#001a4d', pb: 1 }}>Edit User</DialogTitle>
         <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label="Name"
             value={formData.name}
@@ -298,6 +297,8 @@ export default function UsersManagementPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ToastDisplay toast={toast} onClose={closeToast} />
     </Grid>
   )
 }

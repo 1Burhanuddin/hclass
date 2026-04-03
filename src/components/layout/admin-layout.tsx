@@ -113,7 +113,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2', letterSpacing: -0.5 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d', letterSpacing: -0.5 }}>
                 Harshdeep
               </Typography>
               <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3 }}>
@@ -144,7 +144,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 sx={{
                   borderRadius: '10px',
                   bgcolor: isActive ? '#e3f2fd' : 'transparent',
-                  color: isActive ? '#1976d2' : '#616161',
+                  color: isActive ? '#001a4d' : '#616161',
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
@@ -153,7 +153,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
                     transform: 'translateX(2px)',
-                    color: isActive ? '#1976d2' : '#424242',
+                    color: isActive ? '#001a4d' : '#424242',
                   },
                   '&:active': {
                     transform: 'translateX(0px)',
@@ -217,7 +217,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#001a4d' }}>
               Admin Panel
             </Typography>
           </Box>

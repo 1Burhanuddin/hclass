@@ -27,7 +27,7 @@ export default function ProgressBar() {
         pointer-events: none;
       }
       #nprogress .bar {
-        background: linear-gradient(to right, #1976d2, #1565c0, #1976d2);
+        background: linear-gradient(to right, #001a4d, #000d1a, #001a4d);
         position: fixed;
         top: 0;
         left: 0;

@@ -11,13 +11,14 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
-  Alert,
   Chip,
   Backdrop,
 } from '@mui/material'
 import { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
+import { useToast } from '@/hooks/useToast'
+import { ToastDisplay } from '@/components/shared/ToastDisplay'
 import { DataTable, DataCard } from '@/components/ui'
 
 interface User {
@@ -33,9 +34,10 @@ export default function AdminDashboard() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [formData, setFormData] = useState({ name: '', email: '', role: 'student' as 'admin' | 'teacher' | 'student' })
-  const [error, setError] = useState('')
   const [saveLoading, setSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+
+  const { toast, showToast, closeToast } = useToast()
 
   // Fetch real data
   const allUsers = useQuery(api.users.getAllUsers)
@@ -45,29 +47,28 @@ export default function AdminDashboard() {
   const handleEditUser = (user: User) => {
     setSelectedUser(user)
     setFormData({ name: user.name, email: user.email, role: user.role })
-    setError('')
     setEditDialogOpen(true)
   }
 
   const handleSaveUser = async () => {
     if (!selectedUser) return
     if (!formData.name.trim() || !formData.email.trim()) {
-      setError('Name and email are required')
+      showToast('Name and email are required', 'error')
       return
     }
     try {
       setSaveLoading(true)
-      setError('')
       await updateUserMutation({
         userId: selectedUser._id as any,
         name: formData.name,
         email: formData.email,
         role: formData.role,
       })
+      showToast('User updated successfully', 'success')
       setEditDialogOpen(false)
       setSaveLoading(false)
     } catch (err: any) {
-      setError(err.message || 'Failed to update user')
+      showToast(err.message || 'Failed to update user', 'error')
       setSaveLoading(false)
     }
   }
@@ -76,15 +77,15 @@ export default function AdminDashboard() {
     if (!selectedUser) return
     try {
       setDeleteLoading(true)
-      setError('')
       await deactivateUserMutation({
         userId: selectedUser._id as any,
       })
+      showToast('User deleted successfully', 'success')
       setDeleteConfirmOpen(false)
       setEditDialogOpen(false)
       setDeleteLoading(false)
     } catch (err: any) {
-      setError(err.message || 'Failed to delete user')
+      showToast(err.message || 'Failed to delete user', 'error')
       setDeleteLoading(false)
     }
   }
@@ -184,9 +185,8 @@ export default function AdminDashboard() {
             </Box>
           </Backdrop>
         )}
-        <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>Edit User</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700, color: '#001a4d', pb: 1 }}>Edit User</DialogTitle>
         <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5, opacity: saveLoading ? 0.5 : 1, transition: 'opacity 0.2s' }}>
-          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label="Name"
             value={formData.name}
@@ -314,6 +314,8 @@ export default function AdminDashboard() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ToastDisplay toast={toast} onClose={closeToast} />
     </Grid>
   )
 }

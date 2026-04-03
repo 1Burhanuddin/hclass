@@ -6,9 +6,9 @@ export function createAppTheme(): Theme {
   return createTheme({
     palette: {
       primary: {
-        main: '#1976d2',
-        light: '#42a5f5',
-        dark: '#1565c0',
+        main: '#001a4d',
+        light: '#334080',
+        dark: '#001033',
       },
       secondary: {
         main: '#dc004e',
@@ -72,9 +72,9 @@ export function createAppTheme(): Theme {
           },
         },
         contained: {
-          boxShadow: '0 2px 8px rgba(25, 118, 210, 0.2)',
+          boxShadow: '0 2px 8px rgba(0, 26, 77, 0.2)',
           '&:hover': {
-            boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
+            boxShadow: '0 4px 12px rgba(0, 26, 77, 0.3)',
           },
         },
       },
@@ -106,13 +106,96 @@ export function createAppTheme(): Theme {
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: '8px',
+            borderRadius: '12px',
             transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
             '&:hover': {
-              borderColor: '#1976d2',
+              borderColor: '#001a4d',
             },
             '&.Mui-focused': {
-              boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
+              boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+            },
+          },
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+            '&:hover': {
+              borderColor: '#001a4d',
+            },
+            '&.Mui-focused': {
+              boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+            },
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        outlined: {
+          borderRadius: '12px',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#001a4d',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+          },
+        },
+        notchedOutline: {
+          borderRadius: '12px',
+        },
+      },
+    },
+    MuiPopover: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+          marginTop: '8px',
+        },
+        list: {
+          paddingTop: '8px',
+          paddingBottom: '8px',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          margin: '4px 8px',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 26, 77, 0.08)',
+          },
+          '&.Mui-selected': {
+            backgroundColor: 'rgba(0, 26, 77, 0.12)',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 26, 77, 0.16)',
             },
           },
         },
@@ -140,7 +223,7 @@ export function createAppTheme(): Theme {
         root: {
           transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+            backgroundColor: 'rgba(0, 26, 77, 0.08)',
           },
         },
       },

@@ -12,13 +12,16 @@ export function DataCard({ children, ...props }: DataCardProps) {
       borderRadius: '12px',
       transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
       backgroundColor: '#ffffff',
+      minHeight: '56px',
+      display: 'flex',
+      alignItems: 'center',
       '&:hover': {
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         borderColor: '#d0d0d0',
       },
       ...props.sx 
     }}>
-      <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>{children}</CardContent>
+      <CardContent sx={{ p: 3, width: '100%', '&:last-child': { pb: 3 } }}>{children}</CardContent>
     </Card>
   )
 }

@@ -41,7 +41,7 @@ export function ConfirmDialog({
         }
       }}
     >
-      <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>
+      <DialogTitle sx={{ fontWeight: 700, color: '#001a4d', pb: 1 }}>
         {title}
       </DialogTitle>
       <DialogContent sx={{ pt: 2, color: '#424242' }}>

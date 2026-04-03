@@ -18,7 +18,7 @@ export function LoadingSpinner() {
       <CircularProgress 
         size={48}
         sx={{
-          color: '#1976d2',
+          color: '#001a4d',
           animation: 'spin-smooth 1s linear infinite',
           '@keyframes spin-smooth': {
             from: { transform: 'rotate(0deg)' },

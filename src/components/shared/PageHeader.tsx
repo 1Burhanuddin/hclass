@@ -28,7 +28,7 @@ export function PageHeader({ title, subtitle, showLogo = true }: PageHeaderProps
               sx={{ 
                 fontWeight: 700, 
                 cursor: 'pointer',
-                color: '#1976d2',
+                color: '#001a4d',
                 transition: 'all 250ms ease',
                 '&:hover': {
                   color: '#1565c0',

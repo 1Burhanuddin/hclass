@@ -23,16 +23,6 @@ const StyledAppBar = styled(AppBar)<{
     props.enableScrollEffect &&
     props.scrolled &&
     `
-    ${
-      props.detached
-        ? `
-          border-radius: 12px;
-          margin: 12px 16px 0 16px;
-          width: calc(100% - 32px);
-          top: 12px;
-    `
-        : ''
-    }
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     background-color: rgba(255, 255, 255, 0.98);
   `}
@@ -73,6 +63,7 @@ export function EnhancedHeader({
         borderBottom: '1px solid',
         borderColor: '#e0e0e0',
         transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+        borderRadius: '0',
       }}
     >
       <Toolbar

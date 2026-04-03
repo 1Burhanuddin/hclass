@@ -216,8 +216,8 @@ export function EnhancedTable({
                   borderRadius: '8px',
                   transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
-                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                    borderColor: '#1976d2',
+                    backgroundColor: 'rgba(0, 26, 77, 0.04)',
+                    borderColor: '#001a4d',
                   }
                 }}
               >
@@ -262,23 +262,34 @@ export function EnhancedTable({
       )}
 
       {/* Table */}
-      <Box sx={{ flex: 1, overflow: 'auto', width: '100%' }}>
-        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e0e0e0', height: '100%', borderRadius: '8px' }}>
-          {loading && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 10,
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )}
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          width: '100%',
+          boxShadow: 'none', 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px',
+          backgroundColor: '#ffffff',
+          position: 'relative'
+        }}
+      >
+        {loading && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 10,
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
 
-          <Table stickyHeader>
+        <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
               {visibleColumnsList.map((col) => (
@@ -302,7 +313,7 @@ export function EnhancedTable({
                 >
                   {col.label}
                   {sortConfig?.key === col.id && (
-                    <span style={{ marginLeft: '8px', color: '#1976d2' }}>{sortConfig.order === 'asc' ? '↑' : '↓'}</span>
+                    <span style={{ marginLeft: '8px', color: '#001a4d' }}>{sortConfig.order === 'asc' ? '↑' : '↓'}</span>
                   )}
                 </TableCell>
               ))}
@@ -345,7 +356,6 @@ export function EnhancedTable({
           </TableBody>
         </Table>
       </TableContainer>
-      </Box>
 
       {/* Pagination */}
       <Box sx={{ borderTop: '1px solid #e0e0e0', flexShrink: 0, backgroundColor: '#fafafa', transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
@@ -372,7 +382,7 @@ export function EnhancedTable({
               color: '#424242',
             },
             '& .MuiIconButton-root': {
-              color: '#1976d2',
+              color: '#001a4d',
               transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
               '&:hover': {
                 backgroundColor: 'rgba(25, 118, 210, 0.08)',
