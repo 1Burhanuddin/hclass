@@ -119,7 +119,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Brand */}
       <Box
         sx={{
-          p: 3,
+          p: 1.5,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -131,10 +131,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d', letterSpacing: -0.5 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d', letterSpacing: -0.5, my: 0 }}>
                 Harshdeep
               </Typography>
-              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3 }}>
+              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3, mt: 0.25 }}>
                 Class Management
               </Typography>
             </Box>
@@ -150,11 +150,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </Box>
 
       {/* Navigation */}
-      <List sx={{ flex: 1, px: 1.5, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
+      <List sx={{ flex: 1, px: 1, py: 1, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
         {navigationItems.map((item, idx) => {
           const isActive = getActiveStatus(item.href)
           return (
-            <ListItem key={idx} disablePadding sx={{ mb: 1 }}>
+            <ListItem key={idx} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 component={Link}
                 href={item.href}
@@ -166,7 +166,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
-                  margin: '4px 8px',
+                  margin: '2px 4px',
                   transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
