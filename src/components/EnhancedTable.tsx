@@ -170,9 +170,11 @@ export function EnhancedTable({
             pb: 1,
             flexWrap: 'wrap',
             alignItems: 'center',
-            borderBottom: '1px solid #efefef',
+            borderBottom: '1px solid #e0e0e0',
             flexShrink: 0,
             overflow: 'hidden',
+            backgroundColor: '#fafafa',
+            transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {/* Filter inputs */}
@@ -190,6 +192,13 @@ export function EnhancedTable({
                     width: 150,
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px',
+                      transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        borderColor: '#1976d2',
+                      },
+                      '&.Mui-focused': {
+                        boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.1)',
+                      },
                     },
                   }}
                 />
@@ -203,7 +212,14 @@ export function EnhancedTable({
                 size="small"
                 variant="outlined"
                 onClick={handleExport}
-                sx={{ borderRadius: '8px' }}
+                sx={{ 
+                  borderRadius: '8px',
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                    borderColor: '#1976d2',
+                  }
+                }}
               >
                 Export CSV
               </Button>
@@ -214,7 +230,14 @@ export function EnhancedTable({
               variant="outlined"
               startIcon={<ViewWeekIcon />}
               onClick={(e) => setColumnMenuAnchor(e.currentTarget)}
-              sx={{ borderRadius: '8px' }}
+              sx={{ 
+                borderRadius: '8px',
+                transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                  borderColor: '#1976d2',
+                }
+              }}
             >
               Columns
             </Button>
@@ -240,7 +263,7 @@ export function EnhancedTable({
 
       {/* Table */}
       <Box sx={{ flex: 1, overflow: 'auto', width: '100%' }}>
-        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #efefef', height: '100%' }}>
+        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e0e0e0', height: '100%', borderRadius: '8px' }}>
           {loading && (
             <Box
               sx={{
@@ -267,16 +290,19 @@ export function EnhancedTable({
                     fontWeight: 700,
                     cursor: col.sortable ? 'pointer' : 'default',
                     userSelect: 'none',
-                    backgroundColor: '#f5f5f5',
+                    backgroundColor: '#f8f9fa',
+                    borderBottom: '2px solid #e0e0e0',
+                    color: '#1a1a1a',
+                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      backgroundColor: col.sortable ? '#e8e8e8' : '#f5f5f5',
+                      backgroundColor: col.sortable ? '#f1f1f1' : '#f8f9fa',
                     },
                   }}
                   onClick={() => col.sortable && handleSort(col.id)}
                 >
                   {col.label}
                   {sortConfig?.key === col.id && (
-                    <span style={{ marginLeft: '8px' }}>{sortConfig.order === 'asc' ? '↑' : '↓'}</span>
+                    <span style={{ marginLeft: '8px', color: '#1976d2' }}>{sortConfig.order === 'asc' ? '↑' : '↓'}</span>
                   )}
                 </TableCell>
               ))}
@@ -290,14 +316,19 @@ export function EnhancedTable({
                 onClick={() => onRowClick?.(row)}
                 sx={{
                   cursor: onRowClick ? 'pointer' : 'default',
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     backgroundColor: onRowClick ? '#f0f7ff' : 'inherit',
+                    boxShadow: onRowClick ? 'inset 0 0 0 1px #e3f2fd' : 'none',
                   },
-                  borderBottom: '1px solid #efefef',
+                  '&:active': {
+                    backgroundColor: onRowClick ? '#e3f2fd' : 'inherit',
+                  },
+                  borderBottom: '1px solid #f0f0f0',
                 }}
               >
                 {visibleColumnsList.map((col) => (
-                  <TableCell key={col.id} align={col.align}>
+                  <TableCell key={col.id} align={col.align} sx={{ py: 1.5, color: '#424242' }}>
                     {col.format ? col.format(row[col.id]) : row[col.id]}
                   </TableCell>
                 ))}
@@ -306,7 +337,7 @@ export function EnhancedTable({
 
             {paginatedRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={visibleColumnsList.length} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={visibleColumnsList.length} align="center" sx={{ py: 4, color: '#999' }}>
                   No data found
                 </TableCell>
               </TableRow>
@@ -317,7 +348,7 @@ export function EnhancedTable({
       </Box>
 
       {/* Pagination */}
-      <Box sx={{ borderTop: '1px solid #efefef', flexShrink: 0 }}>
+      <Box sx={{ borderTop: '1px solid #e0e0e0', flexShrink: 0, backgroundColor: '#fafafa', transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
         <TablePagination
           rowsPerPageOptions={PAGINATION_OPTIONS}
           component="div"
@@ -326,6 +357,31 @@ export function EnhancedTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            '& .MuiTablePagination-root': {
+              borderTop: 'none',
+            },
+            '& .MuiTablePagination-toolbar': {
+              minHeight: '56px',
+            },
+            '& .MuiTablePagination-selectLabel': {
+              color: '#424242',
+              fontWeight: 500,
+            },
+            '& .MuiTablePagination-displayedRows': {
+              color: '#424242',
+            },
+            '& .MuiIconButton-root': {
+              color: '#1976d2',
+              transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+              '&:hover': {
+                backgroundColor: 'rgba(25, 118, 210, 0.08)',
+              },
+              '&.Mui-disabled': {
+                color: '#ccc',
+              },
+            },
+          }}
         />
       </Box>
     </Box>

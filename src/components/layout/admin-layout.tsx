@@ -140,19 +140,25 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 href={item.href}
                 onClick={() => setMobileDrawerOpen(false)}
                 sx={{
-                  borderRadius: '8px',
+                  borderRadius: '10px',
                   bgcolor: isActive ? '#e3f2fd' : 'transparent',
-                  color: isActive ? '#1976d2' : '#666',
+                  color: isActive ? '#1976d2' : '#616161',
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
+                  margin: '4px 8px',
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
+                    transform: 'translateX(2px)',
+                    color: isActive ? '#1976d2' : '#424242',
                   },
-                  transition: 'all 0.2s ease',
+                  '&:active': {
+                    transform: 'translateX(0px)',
+                  },
                 }}
               >
-                <ListItemIcon sx={{ color: 'inherit', minWidth: sidebarOpen ? 40 : 'auto', justifyContent: 'center' }}>
+                <ListItemIcon sx={{ color: 'inherit', minWidth: sidebarOpen ? 40 : 'auto', justifyContent: 'center', transition: 'all 250ms ease' }}>
                   {item.icon}
                 </ListItemIcon>
                 {sidebarOpen && <ListItemText primary={item.label} primaryTypographyProps={{ fontSize: '0.9rem' }} />}
@@ -167,7 +173,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   )
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#ffffff' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#fafafa' }}>
       {/* Sidebar - Desktop */}
       <Box
         sx={{
@@ -178,14 +184,15 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           position: 'sticky',
           top: 0,
           display: { xs: 'none', md: 'block' },
-          transition: 'all 0.3s ease',
+          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
           overflow: 'auto',
           flexShrink: 0,
           '&::-webkit-scrollbar': { width: '6px' },
           '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
           '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } },
-          bgcolor: '#f9f9f9',
-          borderRight: '1px solid #f0f0f0',
+          bgcolor: '#ffffff',
+          borderRight: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
           zIndex: 100,
         }}
       >

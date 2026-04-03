@@ -72,7 +72,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
     <Box
       sx={{
         height: '100vh',
-        bgcolor: '#f9f9f9',
+        bgcolor: '#ffffff',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -86,6 +86,8 @@ export function StudentLayout({ children }: StudentLayoutProps) {
           alignItems: 'center',
           justifyContent: 'space-between',
           flexShrink: 0,
+          borderBottom: '1px solid #e0e0e0',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {sidebarOpen ? (
@@ -94,14 +96,14 @@ export function StudentLayout({ children }: StudentLayoutProps) {
               <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2' }}>
                 Harshdeep
               </Typography>
-              <Typography variant="caption" sx={{ color: '#666' }}>
+              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                 Student Portal
               </Typography>
             </Box>
             <IconButton
               size="small"
               onClick={() => setSidebarOpen(false)}
-              sx={{ display: { xs: 'none', md: 'flex' } }}
+              sx={{ display: { xs: 'none', md: 'flex' }, transition: 'all 250ms ease' }}
             >
               <ChevronLeftIcon />
             </IconButton>
@@ -110,7 +112,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
           <IconButton
             size="small"
             onClick={() => setSidebarOpen(true)}
-            sx={{ display: { xs: 'none', md: 'flex' } }}
+            sx={{ display: { xs: 'none', md: 'flex' }, transition: 'all 250ms ease' }}
           >
             <ChevronLeftIcon sx={{ transform: 'rotate(180deg)' }} />
           </IconButton>
@@ -122,6 +124,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
         sx={{
           flex: 1,
           px: 1.5,
+          py: 2,
           overflow: 'auto',
           '&::-webkit-scrollbar': { width: '6px' },
           '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
@@ -141,16 +144,22 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                 href={item.href}
                 onClick={() => setMobileDrawerOpen(false)}
                 sx={{
-                  borderRadius: '8px',
+                  borderRadius: '10px',
                   bgcolor: isActive ? '#e3f2fd' : 'transparent',
-                  color: isActive ? '#1976d2' : '#666',
+                  color: isActive ? '#1976d2' : '#616161',
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
+                  margin: '4px 8px',
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
+                    transform: 'translateX(2px)',
+                    color: isActive ? '#1976d2' : '#424242',
                   },
-                  transition: 'all 0.2s ease',
+                  '&:active': {
+                    transform: 'translateX(0px)',
+                  },
                 }}
               >
                 <ListItemIcon
@@ -158,6 +167,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                     color: 'inherit',
                     minWidth: sidebarOpen ? 40 : 'auto',
                     justifyContent: 'center',
+                    transition: 'all 250ms ease',
                   }}
                 >
                   {item.icon}
@@ -177,17 +187,20 @@ export function StudentLayout({ children }: StudentLayoutProps) {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#ffffff' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#fafafa' }}>
       {/* Sidebar - Desktop */}
       <Box
         sx={{
           width: sidebarOpen ? 280 : 80,
+          minWidth: sidebarOpen ? 280 : 80,
+          maxWidth: sidebarOpen ? 280 : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
           display: { xs: 'none', md: 'block' },
-          transition: 'width 0.3s ease',
+          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
           overflow: 'auto',
+          flexShrink: 0,
           '&::-webkit-scrollbar': { width: '6px' },
           '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
           '&::-webkit-scrollbar-thumb': {
@@ -195,36 +208,40 @@ export function StudentLayout({ children }: StudentLayoutProps) {
             borderRadius: '3px',
             '&:hover': { bgcolor: '#999' },
           },
-          bgcolor: '#f9f9f9',
-          borderRight: '1px solid #f0f0f0',
+          bgcolor: '#ffffff',
+          borderRight: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+          zIndex: 100,
         }}
       >
         {sidebarContent}
       </Box>
 
       {/* Mobile Drawer */}
-      <Drawer anchor="left" open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)}>
+      <Drawer anchor="left" open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} sx={{ zIndex: 1100 }}>
         <Box sx={{ width: 280 }}>{sidebarContent}</Box>
       </Drawer>
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
         {/* Header */}
         <AppBar
           position="sticky"
           elevation={0}
           sx={{
             bgcolor: '#ffffff',
-            color: '#333',
-            borderBottom: '1px solid #f0f0f0',
+            color: '#1a1a1a',
+            borderBottom: '1px solid #e0e0e0',
             zIndex: (theme) => theme.zIndex.drawer - 1,
+            transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 3 }, minHeight: { xs: 56, md: 64 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconButton
                 onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
-                sx={{ display: { xs: 'flex', md: 'none' }, color: '#333' }}
+                sx={{ display: { xs: 'flex', md: 'none' }, color: '#1976d2', transition: 'all 250ms ease' }}
               >
                 <MenuIcon />
               </IconButton>
@@ -237,8 +254,12 @@ export function StudentLayout({ children }: StudentLayoutProps) {
               <IconButton
                 onClick={handleNotificationsClick}
                 sx={{
-                  color: '#666',
+                  color: '#1976d2',
                   position: 'relative',
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                  },
                   '&::after': {
                     content: '""',
                     position: 'absolute',
@@ -285,7 +306,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 4 } }}>
+        <Box sx={{ flex: 1, overflow: 'auto', overflowX: 'hidden', p: { xs: 2, md: 4 }, width: '100%' }}>
           {children}
         </Box>
       </Box>
