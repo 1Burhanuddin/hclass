@@ -65,6 +65,9 @@ export function EnhancedHeader({
         transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
         borderRadius: '0',
         minHeight: { xs: 56, md: 64 },
+        top: 0,
+        left: 0,
+        right: 0,
       }}
       style={{
         minHeight: trigger ? 48 : undefined,

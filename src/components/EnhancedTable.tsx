@@ -289,7 +289,7 @@ export function EnhancedTable({
           </Box>
         )}
 
-        <Table stickyHeader>
+        <Table stickyHeader sx={{ width: '100%' }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
               {visibleColumnsList.map((col) => (
