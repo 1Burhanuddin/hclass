@@ -106,24 +106,26 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           alignItems: 'center',
           justifyContent: 'space-between',
           flexShrink: 0,
+          borderBottom: '1px solid #e0e0e0',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2', letterSpacing: -0.5 }}>
                 Harshdeep
               </Typography>
-              <Typography variant="caption" sx={{ color: '#666' }}>
+              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3 }}>
                 Class Management
               </Typography>
             </Box>
-            <IconButton size="small" onClick={() => setSidebarOpen(false)} sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton size="small" onClick={() => setSidebarOpen(false)} sx={{ display: { xs: 'none', md: 'flex' }, transition: 'all 250ms ease' }}>
               <ChevronLeftIcon />
             </IconButton>
           </>
         ) : (
-          <IconButton size="small" onClick={() => setSidebarOpen(true)} sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <IconButton size="small" onClick={() => setSidebarOpen(true)} sx={{ display: { xs: 'none', md: 'flex' }, transition: 'all 250ms ease', m: 'auto' }}>
             <ChevronLeftIcon sx={{ transform: 'rotate(180deg)' }} />
           </IconButton>
         )}
@@ -272,7 +274,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </EnhancedHeader>
 
         {/* Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', overflowX: 'hidden', p: { xs: 2, md: 4 }, width: '100%' }}>
+        <Box sx={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          overflowX: 'hidden', 
+          p: { xs: 2, sm: 3, md: 4 }, 
+          width: '100%',
+          backgroundColor: '#fafafa',
+        }}>
           {children}
         </Box>
       </Box>
