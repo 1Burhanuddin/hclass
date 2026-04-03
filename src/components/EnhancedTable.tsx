@@ -159,7 +159,7 @@ export function EnhancedTable({
   }
 
   return (
-    <Box sx={{ width: '100%', overflow: 'auto' }}>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       {/* Toolbar */}
       {visibleColumnsList.some((col) => col.filterable) && (
         <Box
@@ -171,6 +171,8 @@ export function EnhancedTable({
             flexWrap: 'wrap',
             alignItems: 'center',
             borderBottom: '1px solid #efefef',
+            flexShrink: 0,
+            overflow: 'hidden',
           }}
         >
           {/* Filter inputs */}
@@ -237,22 +239,23 @@ export function EnhancedTable({
       )}
 
       {/* Table */}
-      <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #efefef' }}>
-        {loading && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 10,
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
+      <Box sx={{ flex: 1, overflow: 'auto', width: '100%' }}>
+        <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #efefef', height: '100%' }}>
+          {loading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 10,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
 
-        <Table stickyHeader>
+          <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
               {visibleColumnsList.map((col) => (
@@ -311,9 +314,10 @@ export function EnhancedTable({
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
 
       {/* Pagination */}
-      <Box sx={{ borderTop: '1px solid #efefef' }}>
+      <Box sx={{ borderTop: '1px solid #efefef', flexShrink: 0 }}>
         <TablePagination
           rowsPerPageOptions={PAGINATION_OPTIONS}
           component="div"

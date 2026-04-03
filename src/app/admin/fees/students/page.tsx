@@ -149,7 +149,7 @@ export default function ManageStudentFeesPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '100%' }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
           Manage Student Fees
@@ -159,13 +159,14 @@ export default function ManageStudentFeesPage() {
         </Typography>
       </Box>
 
-      <Card sx={{ border: '1px solid #efefef', borderRadius: '12px' }}>
-        <CardContent sx={{ minHeight: '600px', display: 'flex', flexDirection: 'column', p: 0 }}>
-          <EnhancedTable
-            columns={[
-              { id: 'studentName', label: 'Student Name', minWidth: 180, sortable: true },
-              { id: 'studentEmail', label: 'Email', minWidth: 200, sortable: true },
-              { id: 'batchName', label: 'Batch', minWidth: 130, sortable: true },
+      <Card sx={{ border: '1px solid #efefef', borderRadius: '12px', overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <CardContent sx={{ minHeight: '600px', display: 'flex', flexDirection: 'column', p: 0, overflow: 'hidden', flex: 1 }}>
+          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', width: '100%' }}>
+            <EnhancedTable
+              columns={[
+                { id: 'studentName', label: 'Student Name', minWidth: 180, sortable: true },
+                { id: 'studentEmail', label: 'Email', minWidth: 200, sortable: true },
+                { id: 'batchName', label: 'Batch', minWidth: 130, sortable: true },
               {
                 id: 'totalFees',
                 label: 'Total Fees',
@@ -221,6 +222,7 @@ export default function ManageStudentFeesPage() {
             loading={!students || !batches || !allFees}
             onRowClick={handleOpenDialog}
           />
+          </Box>
         </CardContent>
       </Card>
 

@@ -265,7 +265,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </EnhancedHeader>
 
         {/* Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 4 } }}>
+        <Box sx={{ flex: 1, overflow: 'auto', overflowX: 'hidden', p: { xs: 2, md: 4 }, width: '100%' }}>
           {children}
         </Box>
       </Box>
