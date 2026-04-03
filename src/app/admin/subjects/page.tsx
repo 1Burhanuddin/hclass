@@ -16,7 +16,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import AddIcon from '@mui/icons-material/Add'
 
 interface Subject {
@@ -118,10 +118,10 @@ export default function SubjectsManagementPage() {
     }
   }
 
-  const tableColumns = [
-    { id: 'name', label: 'Subject Name' },
-    { id: 'code', label: 'Code', width: '150px' },
-    { id: 'description', label: 'Description' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'name', label: 'Subject Name', minWidth: 200, sortable: true, filterable: true },
+    { id: 'code', label: 'Code', minWidth: 120, sortable: true, filterable: true, hideOnMobile: true },
+    { id: 'description', label: 'Description', minWidth: 250, sortable: true, filterable: true, hideOnMobile: true },
   ]
 
   return (
@@ -150,16 +150,20 @@ export default function SubjectsManagementPage() {
 
       {/* Subjects Table */}
       <Grid item xs={12}>
-        <DataCard>
-          <DataTable
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden'
+        }}>
+          <EnhancedTable
             columns={tableColumns}
-            data={allSubjects || []}
+            rows={allSubjects || []}
             loading={!allSubjects}
-            disabled={saveLoading || deleteLoading}
             onRowClick={handleEditSubject}
-            emptyMessage="No subjects found. Create your first subject to get started."
+            allowExport={true}
           />
-        </DataCard>
+        </Box>
       </Grid>
 
       {/* Subject Dialog */}

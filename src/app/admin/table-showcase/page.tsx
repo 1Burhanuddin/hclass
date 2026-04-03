@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Card, CardContent, Typography, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, Button } from '@mui/material'
-import { DataTable } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 
 export default function TableShowcasePage() {
   const sampleData = [
@@ -12,16 +12,18 @@ export default function TableShowcasePage() {
     { id: '5', name: 'Carol White', email: 'carol@example.com', role: 'Student', status: 'pending', joinDate: '2024-03-01' },
   ]
 
-  const dataTableColumns = [
-    { id: 'name', label: 'Name', width: '25%' },
-    { id: 'email', label: 'Email', width: '25%' },
-    { id: 'role', label: 'Role', width: '15%' },
-    { id: 'joinDate', label: 'Join Date', width: '20%' },
+  const enhancedTableColumns: EnhancedTableColumn[] = [
+    { id: 'name', label: 'Name', minWidth: 150, sortable: true, filterable: true },
+    { id: 'email', label: 'Email', minWidth: 200, sortable: true, filterable: true, hideOnMobile: true },
+    { id: 'role', label: 'Role', minWidth: 120, sortable: true, filterable: true },
+    { id: 'joinDate', label: 'Join Date', minWidth: 120, sortable: true, hideOnMobile: true },
     {
       id: 'status',
       label: 'Status',
-      width: '15%',
-      render: (value: string) => (
+      minWidth: 120,
+      sortable: true,
+      filterable: true,
+      format: (value: string) => (
         <Chip
           label={value.charAt(0).toUpperCase() + value.slice(1)}
           color={value === 'active' ? 'success' : value === 'inactive' ? 'error' : 'warning'}
@@ -57,28 +59,25 @@ export default function TableShowcasePage() {
       <Card sx={{ mb: 4 }}>
         <CardContent>
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
-            📊 Current: DataTable Component
+            📊 Current: EnhancedTable Component
           </Typography>
           <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-            Simple, lightweight table built with MUI. Great for quick implementation with standard features.
+            Advanced table with comprehensive features for complex data management and user interactions.
           </Typography>
           <Box sx={{ mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Chip label="✓ Sortable" size="small" sx={{ borderRadius: '16px' }} />
-            <Chip label="✓ Pageable" size="small" sx={{ borderRadius: '16px' }} />
-            <Chip label="✓ Responsive" size="small" sx={{ borderRadius: '16px' }} />
-            <Chip label="✓ Custom Render" size="small" sx={{ borderRadius: '16px' }} />
-            <Chip
-              label="✗ Row Selection"
-              size="small"
-              sx={{ borderRadius: '16px', backgroundColor: '#ffebee' }}
-            />
-            <Chip
-              label="✗ CSV Export"
-              size="small"
-              sx={{ borderRadius: '16px', backgroundColor: '#ffebee' }}
-            />
+            <Chip label="✓ Advanced Filtering" size="small" sx={{ borderRadius: '16px' }} />
+            <Chip label="✓ Column Sorting" size="small" sx={{ borderRadius: '16px' }} />
+            <Chip label="✓ Pagination" size="small" sx={{ borderRadius: '16px' }} />
+            <Chip label="✓ Column Visibility" size="small" sx={{ borderRadius: '16px' }} />
+            <Chip label="✓ CSV Export" size="small" sx={{ borderRadius: '16px' }} />
+            <Chip label="✓ Mobile Responsive" size="small" sx={{ borderRadius: '16px' }} />
           </Box>
-          <DataTable columns={dataTableColumns} data={sampleData} onRowClick={(row) => console.log(row)} />
+          <EnhancedTable 
+            columns={enhancedTableColumns} 
+            rows={sampleData} 
+            onRowClick={(row) => console.log(row)}
+            allowExport={true}
+          />
         </CardContent>
       </Card>
 
@@ -183,7 +182,7 @@ export default function TableShowcasePage() {
               <TableHead>
                 <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
                   <TableCell sx={{ fontWeight: 700 }}>Feature</TableCell>
-                  <TableCell sx={{ fontWeight: 700, textAlign: 'center' }}>DataTable (Current)</TableCell>
+                  <TableCell sx={{ fontWeight: 700, textAlign: 'center' }}>EnhancedTable (Current)</TableCell>
                   <TableCell sx={{ fontWeight: 700, textAlign: 'center' }}>Advanced Table (RMS)</TableCell>
                 </TableRow>
               </TableHead>
@@ -234,16 +233,16 @@ export default function TableShowcasePage() {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography variant="body2">
-              <strong>Use Current DataTable when:</strong> You need quick, simple tables with basic sorting and pagination.
-              Best for small data sets and low-complexity requirements.
+              <strong>Use EnhancedTable when:</strong> You need comprehensive table functionality with filtering, sorting, export, and responsive design.
+              Perfect for admin panels and data-heavy interfaces.
             </Typography>
             <Typography variant="body2">
               <strong>Use Advanced Table when:</strong> You need bulk row selection, CSV export, complex filtering, or
               advanced analytics features. Worth the extra setup for high-frequency table interactions.
             </Typography>
             <Typography variant="body2" sx={{ pt: 2 }}>
-              <strong>Suggestion:</strong> Keep DataTable for simple dashboards, consider Advanced Table for admin panels
-              with batch operations (e.g., bulk grade updates, attendance marking).
+              <strong>Suggestion:</strong> EnhancedTable is now the standard for all admin panels, providing consistent UX
+              with advanced features like filtering, export, and mobile responsiveness across all modules.
             </Typography>
           </Box>
         </CardContent>

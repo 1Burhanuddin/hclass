@@ -20,8 +20,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Switch,
-  FormControlLabel,
 } from '@mui/material'
 import { DataTable, DataCard } from '@/components/ui'
 
@@ -31,7 +29,6 @@ interface Student {
   email: string
   role: 'student'
   isActive: boolean
-  deletedAt?: number
   createdAt: number
 }
 
@@ -43,21 +40,22 @@ interface Batch {
 export default function StudentsManagementPage() {
   const allUsers = useQuery(api.users.getAllUsers)
   const allBatches = useQuery(api.batches.getAllBatches)
-  const allStudentEnrollments = useQuery(api.students.getAllStudents)
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
+  const currentStudentEnrollment = useQuery(
+    selectedUserId ? api.students.getStudentByUserId : null,
+    selectedUserId ? { userId: selectedUserId as any } : 'skip'
+  )
   
   const updateUserMutation = useMutation(api.users.updateUserDetails)
   const deactivateUserMutation = useMutation(api.users.deactivateUser)
-  const reactivateUserMutation = useMutation(api.users.reactivateUser)
   const createStudentMutation = useMutation(api.students.createStudent)
   const updateStudentBatchMutation = useMutation(api.students.updateStudentBatch)
   
   const [openDialog, setOpenDialog] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openEnrollDialog, setOpenEnrollDialog] = useState(false)
-  const [openRestoreDialog, setOpenRestoreDialog] = useState(false)
   const [editingStudent, setEditingStudent] = useState<Student | null>(null)
   const [enrollingStudent, setEnrollingStudent] = useState<Student | null>(null)
-  const [showDeleted, setShowDeleted] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -69,13 +67,9 @@ export default function StudentsManagementPage() {
   const [saveLoading, setSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [enrollLoading, setEnrollLoading] = useState(false)
-  const [restoreLoading, setRestoreLoading] = useState(false)
 
   // Filter for students only
-  const allStudents = allUsers?.filter((u) => u.role === 'student') || []
-  const students = showDeleted 
-    ? allStudents.filter((u) => u.deletedAt !== undefined)
-    : allStudents.filter((u) => u.deletedAt === undefined)
+  const students = allUsers?.filter((u) => u.role === 'student') || []
 
   // Generate unique enrollment number
   const generateEnrollmentNumber = () => {
@@ -121,6 +115,7 @@ export default function StudentsManagementPage() {
 
   const handleEnrollStudent = (s: Student) => {
     setEnrollingStudent(s)
+    setSelectedUserId(s._id)
     setEnrollData({ selectedBatch: '' })
     setError('')
     setOpenDialog(false) // Close edit dialog
@@ -137,17 +132,12 @@ export default function StudentsManagementPage() {
       setEnrollLoading(true)
       setError('')
       
-      // Find if student is already enrolled
-      const currentEnrollment = allStudentEnrollments?.find(
-        (se: any) => se.user?._id === enrollingStudent._id
-      )
-      
       // If student is already enrolled, update their batch; otherwise create new enrollment
-      if (currentEnrollment?.batchId) {
+      if (currentStudentEnrollment?.batchId) {
         // Update existing enrollment
         await updateStudentBatchMutation({
-          studentId: currentEnrollment._id as any,
-          batchId: enrollData.selectedBatch as any,
+          studentId: currentStudentEnrollment._id as any,
+          newBatchId: enrollData.selectedBatch as any,
         })
       } else {
         // Create new enrollment
@@ -162,6 +152,7 @@ export default function StudentsManagementPage() {
       
       setOpenEnrollDialog(false)
       setEnrollLoading(false)
+      setSelectedUserId(null)
     } catch (err: any) {
       setError(err.message || 'Failed to enroll student')
       setEnrollLoading(false)
@@ -190,31 +181,6 @@ export default function StudentsManagementPage() {
     } catch (err: any) {
       setError(err.message || 'Failed to delete student')
       setDeleteLoading(false)
-    }
-  }
-
-  const handleRestoreStudent = (s: Student) => {
-    setEditingStudent(s)
-    setError('')
-    setOpenRestoreDialog(true)
-  }
-
-  const handleConfirmRestore = async () => {
-    if (!editingStudent) return
-    
-    try {
-      setRestoreLoading(true)
-      setError('')
-      
-      await reactivateUserMutation({
-        userId: editingStudent._id as any,
-      })
-      
-      setOpenRestoreDialog(false)
-      setRestoreLoading(false)
-    } catch (err: any) {
-      setError(err.message || 'Failed to restore student')
-      setRestoreLoading(false)
     }
   }
 
@@ -250,16 +216,9 @@ export default function StudentsManagementPage() {
               Students Management
             </Typography>
             <Typography variant="body2" sx={{ color: '#666' }}>
-              {showDeleted 
-                ? `Manage deleted students (${students?.length || 0} total)` 
-                : `Manage active students (${students?.length || 0} total)`}
+              Manage system students ({students?.length || 0} total)
             </Typography>
           </Box>
-          <FormControlLabel
-            control={<Switch checked={showDeleted} onChange={(e) => setShowDeleted(e.target.checked)} />}
-            label="Show Deleted"
-            sx={{ fontWeight: 500 }}
-          />
         </Box>
       </Grid>
 
@@ -309,147 +268,118 @@ export default function StudentsManagementPage() {
           />
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 1 }}>
-          {!editingStudent?.deletedAt ? (
-            <>
-              <Button
-                onClick={() => handleEnrollStudent(editingStudent!)}
-                variant="outlined"
-                fullWidth
-                sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
-                disabled={saveLoading || deleteLoading}
-              >
-                Enroll in Batch
-              </Button>
-              <Button
-                onClick={() => setOpenDeleteDialog(true)}
-                variant="outlined"
-                color="error"
-                sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
-                disabled={saveLoading || deleteLoading}
-              >
-                Delete
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={() => handleRestoreStudent(editingStudent!)}
-              variant="outlined"
-              sx={{ 
-                borderRadius: '8px', 
-                py: 1, 
-                px: 2, 
-                textTransform: 'none',
-                color: '#2e7d32',
-                borderColor: '#2e7d32',
-              }}
-              disabled={restoreLoading}
-            >
-              Restore
-            </Button>
-          )}
+          <Button
+            onClick={() => handleEnrollStudent(editingStudent!)}
+            variant="outlined"
+            fullWidth
+            sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
+            disabled={saveLoading || deleteLoading}
+          >
+            Enroll in Batch
+          </Button>
+          <Button
+            onClick={() => setOpenDeleteDialog(true)}
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
+            disabled={saveLoading || deleteLoading}
+          >
+            Delete
+          </Button>
           <Box sx={{ flex: 1 }} />
           <Button
             onClick={() => setOpenDialog(false)}
             sx={{ borderRadius: '8px', py: 1, px: 2 }}
-            disabled={saveLoading || deleteLoading || restoreLoading}
+            disabled={saveLoading || deleteLoading}
           >
             Cancel
           </Button>
-          {!editingStudent?.deletedAt && (
-            <Button 
-              onClick={handleSaveStudent}
-              variant="contained" 
-              sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
-              disabled={saveLoading || deleteLoading}
-            >
-              {saveLoading ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                  <CircularProgress size={18} sx={{ color: 'inherit' }} /> Saving...
-                </Box>
-              ) : (
-                'Save'
-              )}
-            </Button>
-          )}
+          <Button 
+            onClick={handleSaveStudent}
+            variant="contained" 
+            sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
+            disabled={saveLoading || deleteLoading}
+          >
+            {saveLoading ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                <CircularProgress size={18} sx={{ color: 'inherit' }} /> Saving...
+              </Box>
+            ) : (
+              'Save'
+            )}
+          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Enroll Student Dialog */}
-      {(() => {
-        const currentEnrollment = allStudentEnrollments?.find(
-          (se: any) => se.user?._id === enrollingStudent?._id
-        )
-        return (
-          <Dialog open={openEnrollDialog} onClose={() => setOpenEnrollDialog(false)} maxWidth="sm" fullWidth>
-            <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>
-              {currentEnrollment?.batchId ? 'Update Student Batch' : 'Enroll Student in Batch'}
-            </DialogTitle>
-            <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-              {error && <Alert severity="error">{error}</Alert>}
-              <Typography sx={{ color: '#666', fontWeight: 500 }}>
-                Student: <strong>{enrollingStudent?.name}</strong>
+      <Dialog open={openEnrollDialog} onClose={() => {setOpenEnrollDialog(false); setSelectedUserId(null);}} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>
+          {currentStudentEnrollment?.batchId ? 'Update Student Batch' : 'Enroll Student in Batch'}
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          {error && <Alert severity="error">{error}</Alert>}
+          <Typography sx={{ color: '#666', fontWeight: 500 }}>
+            Student: <strong>{enrollingStudent?.name}</strong>
+          </Typography>
+          
+          {currentStudentEnrollment?.batchId && (
+            <Alert severity="info" sx={{ borderRadius: '8px' }}>
+              <Typography variant="body2">
+                <strong>Current Enrollment:</strong> {currentStudentEnrollment.batch?.name || 'Loading...'}
               </Typography>
-              
-              {currentEnrollment?.batchId && (
-                <Alert severity="info" sx={{ borderRadius: '8px' }}>
-                  <Typography variant="body2">
-                    <strong>Current Enrollment:</strong> {currentEnrollment.batch?.name || 'Loading...'}
-                  </Typography>
-                </Alert>
-              )}
-              
-              <FormControl fullWidth disabled={enrollLoading}>
-                <InputLabel>Select Batch</InputLabel>
-                <Select
-                  value={enrollData.selectedBatch || (currentEnrollment?.batchId || '')}
-                  label="Select Batch"
-                  onChange={(e) => setEnrollData({ ...enrollData, selectedBatch: e.target.value })}
-                  sx={{
-                    borderRadius: '12px',
-                  }}
-                >
-                  {allBatches?.map((batch: any) => (
-                    <MenuItem key={batch._id} value={batch._id}>
-                      {batch.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            </Alert>
+          )}
+          
+          <FormControl fullWidth disabled={enrollLoading}>
+            <InputLabel>Select Batch</InputLabel>
+            <Select
+              value={enrollData.selectedBatch || (currentStudentEnrollment?.batchId || '')}
+              label="Select Batch"
+              onChange={(e) => setEnrollData({ ...enrollData, selectedBatch: e.target.value })}
+              sx={{
+                borderRadius: '12px',
+              }}
+            >
+              {allBatches?.map((batch: any) => (
+                <MenuItem key={batch._id} value={batch._id}>
+                  {batch.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-              <Alert severity="info" sx={{ borderRadius: '8px' }}>
-                <Typography variant="caption">
-                  {currentEnrollment?.batchId 
-                    ? 'Select a batch to update the student\'s enrollment.'
-                    : 'Enrollment number will be automatically generated upon saving.'}
-                </Typography>
-              </Alert>
-            </DialogContent>
-            <DialogActions sx={{ p: 2, gap: 1 }}>
-              <Button
-                onClick={() => setOpenEnrollDialog(false)}
-                sx={{ borderRadius: '8px', py: 1, px: 2 }}
-                disabled={enrollLoading}
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSaveEnrollment}
-                variant="contained" 
-                sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
-                disabled={enrollLoading}
-              >
-                {enrollLoading ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                    <CircularProgress size={18} sx={{ color: 'inherit' }} /> {currentEnrollment?.batchId ? 'Updating...' : 'Enrolling...'}
-                  </Box>
-                ) : (
-                  currentEnrollment?.batchId ? 'Update Batch' : 'Enroll'
-                )}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )
-      })()}
+          <Alert severity="info" sx={{ borderRadius: '8px' }}>
+            <Typography variant="caption">
+              {currentStudentEnrollment?.batchId 
+                ? 'Select a batch to update the student\'s enrollment.'
+                : 'Enrollment number will be automatically generated upon saving.'}
+            </Typography>
+          </Alert>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          <Button
+            onClick={() => {setOpenEnrollDialog(false); setSelectedUserId(null);}}
+            sx={{ borderRadius: '8px', py: 1, px: 2 }}
+            disabled={enrollLoading}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSaveEnrollment}
+            variant="contained" 
+            sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
+            disabled={enrollLoading}
+          >
+            {enrollLoading ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                <CircularProgress size={18} sx={{ color: 'inherit' }} /> {currentStudentEnrollment?.batchId ? 'Updating...' : 'Enrolling...'}
+              </Box>
+            ) : (
+              currentStudentEnrollment?.batchId ? 'Update Batch' : 'Enroll'
+            )}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)} maxWidth="sm">
@@ -480,46 +410,6 @@ export default function StudentsManagementPage() {
               </Box>
             ) : (
               'Delete'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Restore Confirmation Dialog */}
-      <Dialog open={openRestoreDialog} onClose={() => setOpenRestoreDialog(false)} maxWidth="sm">
-        <DialogTitle sx={{ fontWeight: 700, color: '#2e7d32', pb: 1 }}>Restore Student</DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
-          <Typography>
-            Are you sure you want to restore <strong>{editingStudent?.name}</strong>? This will re-activate their account and they will appear in the student list.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ p: 2, gap: 1 }}>
-          <Button 
-            onClick={() => setOpenRestoreDialog(false)}
-            sx={{ borderRadius: '8px', py: 1, px: 2 }} 
-            disabled={restoreLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmRestore}
-            variant="contained"
-            sx={{ 
-              borderRadius: '8px', 
-              py: 1, 
-              px: 3, 
-              minWidth: '100px',
-              backgroundColor: '#2e7d32',
-              '&:hover': { backgroundColor: '#1b5e20' },
-            }}
-            disabled={restoreLoading}
-          >
-            {restoreLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                <CircularProgress size={18} sx={{ color: 'inherit' }} /> Restoring...
-              </Box>
-            ) : (
-              'Restore'
             )}
           </Button>
         </DialogActions>

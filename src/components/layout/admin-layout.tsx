@@ -35,10 +35,6 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import PaletteIcon from '@mui/icons-material/Palette'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptIcon from '@mui/icons-material/Receipt'
-import SchoolIcon from '@mui/icons-material/School'
-import AccountTreeIcon from '@mui/icons-material/AccountTree'
-import GridOnIcon from '@mui/icons-material/GridOn'
-import GridViewIcon from '@mui/icons-material/GridView'
 import { EnhancedHeader } from '../EnhancedHeader'
 
 interface AdminLayoutProps {
@@ -49,10 +45,10 @@ const navigationItems = [
   { label: 'Dashboard', icon: <HomeIcon />, href: '/admin/dashboard' },
   { label: 'Users', icon: <GroupIcon />, href: '/admin/users' },
   { label: 'Teachers', icon: <PersonIcon />, href: '/admin/teachers' },
-  { label: 'Students', icon: <SchoolIcon />, href: '/admin/students' },
+  { label: 'Students', icon: <PersonIcon />, href: '/admin/students' },
   { label: 'Batches', icon: <ClassIcon />, href: '/admin/batches' },
   { label: 'Subjects', icon: <BookIcon />, href: '/admin/subjects' },
-  { label: 'Mappings', icon: <AccountTreeIcon />, href: '/admin/mapping' },
+  { label: 'Mappings', icon: <PersonIcon />, href: '/admin/mapping' },
   { label: 'Attendance', icon: <EventIcon />, href: '/admin/attendance' },
   { label: 'Assignments', icon: <AssignmentIcon />, href: '/admin/assignments' },
   { label: 'Notifications', icon: <NotificationsIcon />, href: '/admin/notifications' },
@@ -60,8 +56,8 @@ const navigationItems = [
   { label: 'Grades', icon: <GradeIcon />, href: '/admin/grades' },
   { label: 'Announcements', icon: <CampaignIcon />, href: '/admin/announcements' },
   { label: 'UI Components', icon: <PaletteIcon />, href: '/admin/ui-demo' },
-  { label: 'Table Showcase', icon: <GridOnIcon />, href: '/admin/table-showcase' },
-  { label: 'RMS Patterns', icon: <GridViewIcon />, href: '/admin/rms-patterns-demo' },
+  { label: 'Table Showcase', icon: <BookIcon />, href: '/admin/table-showcase' },
+  { label: 'RMS Patterns', icon: <PaletteIcon />, href: '/admin/rms-patterns-demo' },
   { label: 'Settings', icon: <SettingsIcon />, href: '/admin/settings' },
 ]
 
@@ -123,7 +119,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Brand */}
       <Box
         sx={{
-          p: 1.5,
+          p: 3,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -135,10 +131,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {sidebarOpen ? (
           <>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d', letterSpacing: -0.5, my: 0 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#001a4d', letterSpacing: -0.5 }}>
                 Harshdeep
               </Typography>
-              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3, mt: 0.25 }}>
+              <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem', display: 'block', letterSpacing: 0.3 }}>
                 Class Management
               </Typography>
             </Box>
@@ -154,11 +150,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </Box>
 
       {/* Navigation */}
-      <List sx={{ flex: 1, px: 1, py: 1, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
+      <List sx={{ flex: 1, px: 1.5, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
         {navigationItems.map((item, idx) => {
           const isActive = getActiveStatus(item.href)
           return (
-            <ListItem key={idx} disablePadding sx={{ mb: 0.5 }}>
+            <ListItem key={idx} disablePadding sx={{ mb: 1 }}>
               <ListItemButton
                 component={Link}
                 href={item.href}
@@ -170,7 +166,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
-                  margin: '2px 4px',
+                  margin: '4px 8px',
                   transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
@@ -185,20 +181,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <ListItemIcon sx={{ color: 'inherit', minWidth: sidebarOpen ? 40 : 'auto', justifyContent: 'center', transition: 'all 250ms ease' }}>
                   {item.icon}
                 </ListItemIcon>
-                {sidebarOpen && (
-                  <ListItemText 
-                    primary={item.label} 
-                    primaryTypographyProps={{ 
-                      fontSize: '0.9rem',
-                      sx: {
-                        wordBreak: 'break-word',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'normal'
-                      }
-                    }} 
-                  />
-                )}
+                {sidebarOpen && <ListItemText primary={item.label} primaryTypographyProps={{ fontSize: '0.9rem' }} />}
               </ListItemButton>
             </ListItem>
           )

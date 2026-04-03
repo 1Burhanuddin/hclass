@@ -14,6 +14,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+ useScrollTrigger,
 } from '@mui/material';
 
 import { useState, ReactNode, useEffect, useRef } from 'react';
@@ -98,7 +99,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
       {/* Brand */}
       <Box
         sx={{
-          p: 3,
+          p: 1.5,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -140,8 +141,8 @@ export function StudentLayout({ children }: StudentLayoutProps) {
       <List
         sx={{
           flex: 1,
-          px: 1.5,
-          py: 2,
+          px: 1,
+          py: 1,
           overflow: 'auto',
           '&::-webkit-scrollbar': { width: '6px' },
           '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
@@ -167,7 +168,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                   pl: sidebarOpen ? 2 : 1.5,
                   justifyContent: sidebarOpen ? 'flex-start' : 'center',
                   fontWeight: isActive ? 600 : 400,
-                  margin: '4px 8px',
+                  margin: '2px 4px',
                   transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     bgcolor: isActive ? '#e3f2fd' : '#f5f5f5',
@@ -252,10 +253,14 @@ export function StudentLayout({ children }: StudentLayoutProps) {
             borderBottom: '1px solid #e0e0e0',
             zIndex: (theme) => theme.zIndex.drawer - 1,
             transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+            minHeight: isScrolled ? 48 : 64,
+            boxShadow: isScrolled ? '0 6px 16px rgba(0, 0, 0, 0.08)' : '0 2px 8px rgba(0, 0, 0, 0.04)',
+            backdropFilter: isScrolled ? 'blur(12px) saturate(100%)' : 'none',
+            backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.85)' : '#ffffff',
+            borderRadius: isScrolled ? '0 0 12px 12px' : '0',
           }}
         >
-          <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 3 }, minHeight: { xs: 56, md: 64 } }}>
+          <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 3 }, minHeight: 'inherit', transition: 'all 250ms ease' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconButton
                 onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
@@ -264,7 +269,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" sx={{ fontWeight: 600, color: '#001a4d' }}>
-                Student Panel
+                Student Portal
               </Typography>
             </Box>
 

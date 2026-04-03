@@ -19,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import { format } from 'date-fns'
 
 // Configure NProgress
@@ -84,31 +84,38 @@ export default function AttendanceManagementPage() {
 
   const summaryData = getAttendanceSummary()
 
-  const tableColumns = [
-    { id: 'batch', label: 'Batch', width: '20%' },
-    { id: 'subject', label: 'Subject', width: '20%' },
-    { id: 'date', label: 'Date', width: '15%' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'batch', label: 'Batch', minWidth: 150, sortable: true, filterable: true },
+    { id: 'subject', label: 'Subject', minWidth: 150, sortable: true, filterable: true, hideOnMobile: true },
+    { id: 'date', label: 'Date', minWidth: 120, sortable: true },
     {
       id: 'present',
       label: 'Present',
-      width: '12%',
-      render: (value: number) => (
+      minWidth: 100,
+      align: 'center',
+      sortable: true,
+      format: (value: number) => (
         <Chip label={value} color="success" size="small" />
       ),
     },
     {
       id: 'absent',
       label: 'Absent',
-      width: '12%',
-      render: (value: number) => (
+      minWidth: 100,
+      align: 'center',
+      sortable: true,
+      hideOnMobile: true,
+      format: (value: number) => (
         <Chip label={value} color="error" size="small" />
       ),
     },
     {
       id: 'total',
       label: 'Total',
-      width: '11%',
-      render: (value: number) => (
+      minWidth: 100,
+      align: 'center',
+      sortable: true,
+      format: (value: number) => (
         <Chip label={value} variant="outlined" size="small" />
       ),
     },
@@ -164,29 +171,34 @@ export default function AttendanceManagementPage() {
 
       {/* Attendance Records Table */}
       <Grid item xs={12}>
-        <DataCard>
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden'
+        }}>
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ m: 2 }}>
               {error}
             </Alert>
           )}
           {summaryData && summaryData.length > 0 ? (
-            <DataTable
+            <EnhancedTable
               columns={tableColumns}
-              data={summaryData}
+              rows={summaryData}
               loading={!summaryData}
               onRowClick={(row) => {
                 NProgress.start()
                 router.push(`/admin/attendance/add?batchSubject=${row.batchId}&date=${row.date}`)
               }}
-              emptyMessage="No attendance records found"
+              allowExport={true}
             />
           ) : (
             <Typography sx={{ p: 3, textAlign: 'center', color: '#666' }}>
               No attendance records found. Click "Add Attendance" to create one.
             </Typography>
           )}
-        </DataCard>
+        </Box>
       </Grid>
     </Grid>
   )

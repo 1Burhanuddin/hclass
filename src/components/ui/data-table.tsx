@@ -11,8 +11,10 @@ import {
   Typography,
   Box,
   Chip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 interface Column {
   id: string
@@ -20,6 +22,7 @@ interface Column {
   width?: string
   align?: 'left' | 'center' | 'right'
   render?: (value: any, row: any) => ReactNode
+  hideOnMobile?: boolean // New property to hide columns on mobile
 }
 
 interface DataTableProps {
@@ -39,12 +42,26 @@ export function DataTable({
   emptyMessage = 'No data found',
   disabled = false,
 }: DataTableProps) {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  
+  // Filter columns based on mobile visibility
+  const visibleColumns = useMemo(() => {
+    return columns.filter(col => !isMobile || !col.hideOnMobile)
+  }, [columns, isMobile])
+  
   return (
-    <TableContainer sx={{ borderRadius: '8px', border: '1px solid #e0e0e0', overflow: 'auto', overflowX: 'auto', overflowY: 'auto', maxWidth: '100%' }}>
-      <MuiTable sx={{ minWidth: { xs: '600px', sm: '800px', md: '100%' } }}>
+    <TableContainer sx={{ 
+      borderRadius: '8px', 
+      border: '1px solid #e0e0e0', 
+      overflow: 'auto',
+      maxWidth: '100%',
+      width: '100%'
+    }}>
+      <MuiTable sx={{ minWidth: { xs: 300, sm: 650 } }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
-            {columns.map((col) => (
+            {visibleColumns.map((col) => (
               <TableCell
                 key={col.id}
                 sx={{
@@ -53,9 +70,16 @@ export function DataTable({
                   border: 'none',
                   borderBottom: '2px solid #e0e0e0',
                   width: col.width,
+                  minWidth: { xs: 80, sm: 120 },
+                  maxWidth: { xs: 150, sm: 'none' },
                   textAlign: col.align || 'left',
                   backgroundColor: '#f8f9fa',
-                  py: 2,
+                  py: { xs: 1, sm: 2 },
+                  px: { xs: 1, sm: 2 },
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {col.label}
@@ -66,10 +90,10 @@ export function DataTable({
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={columns.length} sx={{ textAlign: 'center', py: 4, border: 'none' }}>
+              <TableCell colSpan={visibleColumns.length} sx={{ textAlign: 'center', py: 4, border: 'none' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, color: '#666' }}>
                   <CircularProgress size={20} />
-                  <Typography>Loading...</Typography>
+                  <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>Loading...</Typography>
                 </Box>
               </TableCell>
             </TableRow>
@@ -91,16 +115,45 @@ export function DataTable({
                   pointerEvents: disabled ? 'none' : 'auto',
                 }}
               >
-                {columns.map((col) => (
-                  <TableCell key={col.id} sx={{ border: 'none', fontWeight: 500, color: '#424242', py: 1.5 }}>
-                    {col.render ? col.render(row[col.id], row) : row[col.id]}
+                {visibleColumns.map((col) => (
+                  <TableCell 
+                    key={col.id} 
+                    sx={{ 
+                      border: 'none', 
+                      fontWeight: 500, 
+                      color: '#424242', 
+                      py: { xs: 1, sm: 1.5 },
+                      px: { xs: 1, sm: 2 },
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      maxWidth: { xs: 150, sm: 'none' },
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: { xs: 'nowrap', sm: 'normal' }
+                    }}
+                  >
+                    <Box sx={{ 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: { xs: 'nowrap', sm: 'normal' }
+                    }}>
+                      {col.render ? col.render(row[col.id], row) : row[col.id]}
+                    </Box>
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} sx={{ textAlign: 'center', py: 3, color: '#999', border: 'none' }}>
+              <TableCell 
+                colSpan={visibleColumns.length} 
+                sx={{ 
+                  textAlign: 'center', 
+                  py: 3, 
+                  color: '#999', 
+                  border: 'none',
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}
+              >
                 {emptyMessage}
               </TableCell>
             </TableRow>

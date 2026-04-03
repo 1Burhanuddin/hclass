@@ -17,7 +17,7 @@ import {
   Typography,
   Grid,
 } from '@mui/material'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import AddIcon from '@mui/icons-material/Add'
 
 interface Batch {
@@ -170,10 +170,32 @@ export default function MappingPage() {
     return teacher?.primarySubjectId && teacher.primarySubjectId !== subjectId
   }
 
-  const tableColumns = [
-    { id: 'batchId', label: 'Batch', width: '150px', render: (value: string) => getBatchName(value) },
-    { id: 'subjectId', label: 'Subject', render: (value: string) => getSubjectName(value) },
-    { id: 'teacherId', label: 'Assigned Teacher', render: (value: string) => getTeacherName(value) },
+  const tableColumns: EnhancedTableColumn[] = [
+    { 
+      id: 'batchId', 
+      label: 'Batch', 
+      minWidth: 150, 
+      sortable: true, 
+      filterable: true,
+      format: (value: string) => getBatchName(value) 
+    },
+    { 
+      id: 'subjectId', 
+      label: 'Subject', 
+      minWidth: 150, 
+      sortable: true, 
+      filterable: true,
+      hideOnMobile: true,
+      format: (value: string) => getSubjectName(value) 
+    },
+    { 
+      id: 'teacherId', 
+      label: 'Assigned Teacher', 
+      minWidth: 200, 
+      sortable: true, 
+      filterable: true,
+      format: (value: string) => getTeacherName(value) 
+    },
   ]
 
   return (
@@ -212,16 +234,20 @@ export default function MappingPage() {
 
       {/* Mappings Table */}
       <Grid item xs={12}>
-        <DataCard>
-          <DataTable
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden'
+        }}>
+          <EnhancedTable
             columns={tableColumns}
-            data={allBatchSubjects || []}
+            rows={allBatchSubjects || []}
             loading={!allBatchSubjects}
-            disabled={saveLoading || deleteLoading}
             onRowClick={handleEditMapping}
-            emptyMessage="No mappings found. Create your first mapping to get started."
+            allowExport={true}
           />
-        </DataCard>
+        </Box>
       </Grid>
 
       {/* Edit/Create Mapping Dialog */}

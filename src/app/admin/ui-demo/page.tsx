@@ -5,28 +5,31 @@ import { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 
 export default function UIDemoPage() {
   const [openDialog, setOpenDialog] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
 
-  // Sample data for DataTable demo
+  // Sample data for EnhancedTable demo
   const tableData = [
     { id: '1', name: 'John Doe', status: 'active', email: 'john@example.com', role: 'Teacher' },
     { id: '2', name: 'Jane Smith', status: 'inactive', email: 'jane@example.com', role: 'Student' },
     { id: '3', name: 'Bob Johnson', status: 'active', email: 'bob@example.com', role: 'Admin' },
   ]
 
-  const tableColumns = [
-    { id: 'name', label: 'Name', width: '30%' },
-    { id: 'email', label: 'Email', width: '30%' },
-    { id: 'role', label: 'Role', width: '20%' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'name', label: 'Name', minWidth: 150, sortable: true, filterable: true },
+    { id: 'email', label: 'Email', minWidth: 200, sortable: true, filterable: true, hideOnMobile: true },
+    { id: 'role', label: 'Role', minWidth: 120, sortable: true, filterable: true },
     {
       id: 'status',
       label: 'Status',
-      width: '20%',
-      render: (value: string) => (
+      minWidth: 120,
+      sortable: true,
+      filterable: true,
+      hideOnMobile: true,
+      format: (value: string) => (
         <Chip
           label={value.charAt(0).toUpperCase() + value.slice(1)}
           color={value === 'active' ? 'success' : 'error'}
@@ -197,13 +200,18 @@ export default function UIDemoPage() {
         </CardContent>
       </Card>
 
-      {/* DataTable Section */}
+      {/* EnhancedTable Section */}
       <Card sx={{ mb: 4 }}>
         <CardContent>
           <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-            Data Table Component
+            Enhanced Table Component
           </Typography>
-          <DataTable columns={tableColumns} data={tableData} onRowClick={(row) => console.log(row)} />
+          <EnhancedTable 
+            columns={tableColumns} 
+            rows={tableData} 
+            onRowClick={(row) => console.log(row)}
+            allowExport={true}
+          />
         </CardContent>
       </Card>
 

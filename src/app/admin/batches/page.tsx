@@ -20,7 +20,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import AddIcon from '@mui/icons-material/Add'
 
 interface Batch {
@@ -124,10 +124,10 @@ export default function BatchesManagementPage() {
     }
   }
 
-  const tableColumns = [
-    { id: 'class', label: 'Class', width: '100px' },
-    { id: 'section', label: 'Section', width: '100px' },
-    { id: 'name', label: 'Batch Name' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'class', label: 'Class', minWidth: 100, sortable: true, filterable: true },
+    { id: 'section', label: 'Section', minWidth: 100, sortable: true, filterable: true, hideOnMobile: true },
+    { id: 'name', label: 'Batch Name', minWidth: 200, sortable: true, filterable: true },
   ]
 
   return (
@@ -156,16 +156,20 @@ export default function BatchesManagementPage() {
 
       {/* Batches Table */}
       <Grid item xs={12}>
-        <DataCard>
-          <DataTable
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden'
+        }}>
+          <EnhancedTable
             columns={tableColumns}
-            data={allBatches || []}
+            rows={allBatches || []}
             loading={!allBatches}
-            disabled={saveLoading || deleteLoading}
             onRowClick={handleEditBatch}
-            emptyMessage="No batches found. Create your first batch to get started."
+            allowExport={true}
           />
-        </DataCard>
+        </Box>
       </Grid>
 
       {/* Batch Dialog */}

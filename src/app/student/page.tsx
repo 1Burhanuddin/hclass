@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import {
-  Container,
   Grid,
   Card,
   CardContent,
@@ -81,12 +80,8 @@ export default function StudentDashboard() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
-        Welcome back, {userProfile.name}
-      </Typography>
-
-      <Grid container spacing={3}>
+    <Box sx={{ width: '100%' }}>
+      <Grid container spacing={3} sx={{ width: '100%', m: 0, p: { xs: 2, sm: 3, md: 4 } }}>
         {/* Summary Cards Row */}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
@@ -333,7 +328,7 @@ export default function StudentDashboard() {
           </Card>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }
 

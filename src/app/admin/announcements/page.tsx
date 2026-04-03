@@ -23,7 +23,7 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -138,29 +138,36 @@ export default function AnnouncementsManagementPage() {
     }
   }
 
-  const columns = [
-    { id: 'title', label: 'Title', width: '35%' },
+  const columns: EnhancedTableColumn[] = [
+    { id: 'title', label: 'Title', minWidth: 200, sortable: true, filterable: true },
     {
       id: 'audience',
       label: 'Audience',
-      width: '20%',
-      render: (value: string) => <Chip label={audienceLabels[value]} size="small" sx={{ borderRadius: '16px', fontWeight: 600 }} />,
+      minWidth: 120,
+      sortable: true,
+      filterable: true,
+      hideOnMobile: true,
+      format: (value: string) => <Chip label={audienceLabels[value]} size="small" sx={{ borderRadius: '16px', fontWeight: 600 }} />,
     },
     {
       id: 'priority',
       label: 'Priority',
-      width: '15%',
-      render: (value: string) => (
+      minWidth: 100,
+      sortable: true,
+      filterable: true,
+      format: (value: string) => (
         <Chip label={value.charAt(0).toUpperCase() + value.slice(1)} color={priorityColors[value]} size="small" sx={{ borderRadius: '16px', fontWeight: 600 }} />
       ),
     },
     {
       id: 'createdAt',
       label: 'Created',
-      width: '20%',
-      render: (value: number) => new Date(value).toLocaleDateString(),
+      minWidth: 120,
+      sortable: true,
+      hideOnMobile: true,
+      format: (value: number) => new Date(value).toLocaleDateString(),
     },
-    { id: 'createdBy', label: 'By', width: '10%' },
+    { id: 'createdBy', label: 'By', minWidth: 100, sortable: true, filterable: true, hideOnMobile: true },
   ]
 
   return (
@@ -202,11 +209,29 @@ export default function AnnouncementsManagementPage() {
         )}
 
         {announcements.length > 0 ? (
-          <DataTable columns={columns} data={announcements} onRowClick={handleRowClick} />
+          <Box sx={{ 
+            border: '1px solid #e0e0e0', 
+            borderRadius: '8px', 
+            backgroundColor: 'white',
+            overflow: 'hidden'
+          }}>
+            <EnhancedTable 
+              columns={columns} 
+              rows={announcements} 
+              onRowClick={handleRowClick}
+              allowExport={true}
+            />
+          </Box>
         ) : (
-          <DataCard>
+          <Box sx={{ 
+            border: '1px solid #e0e0e0', 
+            borderRadius: '8px', 
+            backgroundColor: 'white',
+            p: 3,
+            textAlign: 'center'
+          }}>
             <Typography sx={{ color: '#999' }}>No announcements yet</Typography>
-          </DataCard>
+          </Box>
         )}
       </Grid>
 

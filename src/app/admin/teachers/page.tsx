@@ -21,7 +21,7 @@ import {
   Select,
   MenuItem,
 } from '@mui/material'
-import { DataTable, DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 import AddIcon from '@mui/icons-material/Add'
 
 interface Teacher {
@@ -30,7 +30,6 @@ interface Teacher {
   email: string
   role: 'teacher'
   isActive: boolean
-  deletedAt?: number
   createdAt: number
   primarySubjectId?: string
 }
@@ -132,13 +131,16 @@ export default function TeachersManagementPage() {
     }
   }
 
-  const tableColumns = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'name', label: 'Name', minWidth: 150, sortable: true, filterable: true },
+    { id: 'email', label: 'Email', minWidth: 200, sortable: true, filterable: true, hideOnMobile: true },
     {
       id: 'subject',
       label: 'Subject',
-      render: (value: any, row: Teacher) => {
+      minWidth: 150,
+      sortable: true,
+      filterable: true,
+      format: (value: any, row: Teacher) => {
         const teacherRecord = allTeachers?.find((tr: any) => tr.userId === row._id)
         if (!teacherRecord?.primarySubjectId) return <span style={{ color: '#999' }}>—</span>
         const subject = subjects?.find((s: any) => s._id === teacherRecord.primarySubjectId)
@@ -148,7 +150,10 @@ export default function TeachersManagementPage() {
     {
       id: 'isActive',
       label: 'Status',
-      render: (value: boolean) => (
+      minWidth: 120,
+      sortable: true,
+      hideOnMobile: true,
+      format: (value: boolean) => (
         <Chip
           label={value ? 'Active' : 'Inactive'}
           size="small"
@@ -182,16 +187,20 @@ export default function TeachersManagementPage() {
 
       {/* Teachers Table */}
       <Grid item xs={12}>
-        <DataCard>
-          <DataTable
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden'
+        }}>
+          <EnhancedTable
             columns={tableColumns}
-            data={teachers || []}
+            rows={teachers || []}
             loading={!allUsers}
-            disabled={saveLoading || deleteLoading}
             onRowClick={handleEditTeacher}
-            emptyMessage="No teachers found. Teachers are created through User Management."
+            allowExport={true}
           />
-        </DataCard>
+        </Box>
       </Grid>
 
       {/* Edit Teacher Dialog */}

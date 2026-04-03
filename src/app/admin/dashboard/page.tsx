@@ -19,7 +19,8 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { useToast } from '@/hooks/useToast'
 import { ToastDisplay } from '@/components/shared/ToastDisplay'
-import { DataTable, DataCard } from '@/components/ui'
+import { DataCard } from '@/components/ui'
+import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
 
 interface User {
   _id: string
@@ -90,13 +91,16 @@ export default function AdminDashboard() {
     }
   }
 
-  const tableColumns = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
+  const tableColumns: EnhancedTableColumn[] = [
+    { id: 'name', label: 'Name', minWidth: 150, sortable: true, filterable: true },
+    { id: 'email', label: 'Email', minWidth: 200, sortable: true, filterable: true, hideOnMobile: true },
     {
       id: 'role',
       label: 'Role',
-      render: (value: string) => (
+      minWidth: 120,
+      sortable: true,
+      filterable: true,
+      format: (value: string) => (
         <Chip
           label={value.charAt(0).toUpperCase() + value.slice(1)}
           size="small"
@@ -113,7 +117,10 @@ export default function AdminDashboard() {
     {
       id: 'isActive',
       label: 'Status',
-      render: (value: boolean) => (
+      minWidth: 120,
+      sortable: true,
+      hideOnMobile: true,
+      format: (value: boolean) => (
         <Chip
           label={value ? 'Active' : 'Inactive'}
           size="small"
@@ -148,19 +155,24 @@ export default function AdminDashboard() {
 
       {/* Users Table */}
       <Grid item xs={12}>
-        <DataCard>
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px', 
+          backgroundColor: 'white',
+          overflow: 'hidden',
+          p: 2
+        }}>
           <Typography variant="h6" sx={{ fontWeight: 700, color: '#1976d2', mb: 2 }}>
             Users (Click row to edit)
           </Typography>
-          <DataTable
+          <EnhancedTable
             columns={tableColumns}
-            data={allUsers || []}
+            rows={allUsers || []}
             loading={!allUsers}
             onRowClick={handleEditUser}
-            disabled={saveLoading || deleteLoading}
-            emptyMessage="No users found"
+            allowExport={true}
           />
-        </DataCard>
+        </Box>
       </Grid>
 
       {/* Edit User Dialog */}

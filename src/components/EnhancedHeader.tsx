@@ -17,15 +17,7 @@ const StyledAppBar = styled(AppBar)<{
   enableBlur: boolean
   detached: boolean
 }>`
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 250ms ease-in-out, box-shadow 250ms ease-in-out !important;
-  min-height: ${(props) => (props.scrolled ? '48px' : '64px')} !important;
-  
-  ${(props) => props.detached && props.scrolled && `
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    margin: 0 12px;
-    width: calc(100% - 24px);
-  `}
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 250ms ease-in-out, box-shadow 250ms ease-in-out;
 
   ${(props) =>
     props.enableScrollEffect &&
@@ -71,11 +63,14 @@ export function EnhancedHeader({
         borderBottom: '1px solid',
         borderColor: '#e0e0e0',
         transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-        borderRadius: trigger && detached ? '12px' : '0',
-        minHeight: trigger ? 48 : 64,
+        borderRadius: '0',
+        minHeight: { xs: 56, md: 64 },
         top: 0,
         left: 0,
         right: 0,
+      }}
+      style={{
+        minHeight: trigger ? 48 : undefined,
       }}
     >
       <Toolbar
