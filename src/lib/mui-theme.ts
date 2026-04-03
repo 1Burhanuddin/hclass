@@ -66,6 +66,16 @@ export function createAppTheme(): Theme {
           textTransform: 'none',
           fontWeight: 500,
           borderRadius: '8px',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-1px)',
+          },
+        },
+        contained: {
+          boxShadow: '0 2px 8px rgba(25, 118, 210, 0.2)',
+          '&:hover': {
+            boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
+          },
         },
       },
     },
@@ -73,7 +83,14 @@ export function createAppTheme(): Theme {
       styleOverrides: {
         root: {
           borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #e0e0e0',
+          backgroundColor: '#ffffff',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+            borderColor: '#d0d0d0',
+          },
         },
       },
     },
@@ -81,6 +98,84 @@ export function createAppTheme(): Theme {
       styleOverrides: {
         root: {
           borderRadius: '12px',
+          backgroundColor: '#ffffff',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '8px',
+            transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+            '&:hover': {
+              borderColor: '#1976d2',
+            },
+            '&.Mui-focused': {
+              boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
+            },
+          },
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: '6px',
+          fontWeight: 500,
+          transition: 'all 250ms ease',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+          },
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ffffff',
+          color: '#1a1a1a',
+          borderBottom: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#f8f9fa',
+          '& .MuiTableCell-head': {
+            fontWeight: 700,
+            color: '#1a1a1a',
+            backgroundColor: '#f8f9fa',
+            borderBottom: '2px solid #e0e0e0',
+          },
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            backgroundColor: '#f0f7ff',
+            boxShadow: 'inset 0 0 0 1px #e3f2fd',
+          },
         },
       },
     },
