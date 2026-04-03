@@ -2,7 +2,6 @@
 
 import {
   Box,
-  AppBar,
   Toolbar,
   Typography,
   IconButton,
@@ -19,6 +18,7 @@ import {
 import { useState, ReactNode, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { UserButton } from '@clerk/nextjs'
 import MenuIcon from '@mui/icons-material/Menu'
 import HomeIcon from '@mui/icons-material/Home'
 import GroupIcon from '@mui/icons-material/Group'
@@ -34,6 +34,7 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import PaletteIcon from '@mui/icons-material/Palette'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptIcon from '@mui/icons-material/Receipt'
+import { EnhancedHeader } from '../EnhancedHeader'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -170,7 +171,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Sidebar - Desktop */}
       <Box
         sx={{
-          width: sidebarOpen ? 280 : 80,
+          width: sidebarOpen ? 320 : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
@@ -196,79 +197,69 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Main Content */}
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
-        <AppBar
-          position="sticky"
-          elevation={0}
-          sx={{
-            bgcolor: '#ffffff',
-            color: '#333',
-            borderBottom: '1px solid #f0f0f0',
-            zIndex: (theme) => theme.zIndex.drawer - 1,
-          }}
-        >
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <IconButton
-                onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
-                sx={{ display: { xs: 'flex', md: 'none' }, color: '#333' }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
-                Admin Panel
-              </Typography>
-            </Box>
+        <EnhancedHeader enableScrollEffect enableBlur detached>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+            <IconButton
+              onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+              sx={{ display: { xs: 'flex', md: 'none' }, color: '#333' }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+              Admin Panel
+            </Typography>
+          </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton
-                onClick={handleNotificationsClick}
-                sx={{
-                  color: '#666',
-                  position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                    width: 8,
-                    height: 8,
-                    backgroundColor: '#ff9800',
-                    borderRadius: '50%',
-                  },
-                }}
-              >
-                <NotificationsIcon />
-              </IconButton>
-              <Menu
-                anchorEl={notificationsMenuOpen}
-                open={Boolean(notificationsMenuOpen)}
-                onClose={handleNotificationsClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                {notifications.length > 0 ? (
-                  notifications.map((notif) => (
-                    <MenuItem key={notif.id} onClick={handleNotificationsClose}>
-                      <Typography variant="body2">{notif.message}</Typography>
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>
-                    <Typography variant="body2" sx={{ color: '#999' }}>
-                      No notifications
-                    </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <IconButton
+              onClick={handleNotificationsClick}
+              sx={{
+                color: '#666',
+                position: 'relative',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  width: 8,
+                  height: 8,
+                  backgroundColor: '#ff9800',
+                  borderRadius: '50%',
+                },
+              }}
+            >
+              <NotificationsIcon />
+            </IconButton>
+            <Menu
+              anchorEl={notificationsMenuOpen}
+              open={Boolean(notificationsMenuOpen)}
+              onClose={handleNotificationsClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              {notifications.length > 0 ? (
+                notifications.map((notif) => (
+                  <MenuItem key={notif.id} onClick={handleNotificationsClose}>
+                    <Typography variant="body2">{notif.message}</Typography>
                   </MenuItem>
-                )}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </AppBar>
+                ))
+              ) : (
+                <MenuItem disabled>
+                  <Typography variant="body2" sx={{ color: '#999' }}>
+                    No notifications
+                  </Typography>
+                </MenuItem>
+              )}
+            </Menu>
+            <UserButton />
+          </Box>
+        </EnhancedHeader>
 
         {/* Content */}
         <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 4 } }}>
