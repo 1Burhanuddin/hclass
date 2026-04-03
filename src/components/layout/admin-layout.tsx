@@ -35,6 +35,10 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import PaletteIcon from '@mui/icons-material/Palette'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptIcon from '@mui/icons-material/Receipt'
+import SchoolIcon from '@mui/icons-material/School'
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import GridOnIcon from '@mui/icons-material/GridOn'
+import GridViewIcon from '@mui/icons-material/GridView'
 import { EnhancedHeader } from '../EnhancedHeader'
 
 interface AdminLayoutProps {
@@ -45,10 +49,10 @@ const navigationItems = [
   { label: 'Dashboard', icon: <HomeIcon />, href: '/admin/dashboard' },
   { label: 'Users', icon: <GroupIcon />, href: '/admin/users' },
   { label: 'Teachers', icon: <PersonIcon />, href: '/admin/teachers' },
-  { label: 'Students', icon: <PersonIcon />, href: '/admin/students' },
+  { label: 'Students', icon: <SchoolIcon />, href: '/admin/students' },
   { label: 'Batches', icon: <ClassIcon />, href: '/admin/batches' },
   { label: 'Subjects', icon: <BookIcon />, href: '/admin/subjects' },
-  { label: 'Mappings', icon: <PersonIcon />, href: '/admin/mapping' },
+  { label: 'Mappings', icon: <AccountTreeIcon />, href: '/admin/mapping' },
   { label: 'Attendance', icon: <EventIcon />, href: '/admin/attendance' },
   { label: 'Assignments', icon: <AssignmentIcon />, href: '/admin/assignments' },
   { label: 'Notifications', icon: <NotificationsIcon />, href: '/admin/notifications' },
@@ -56,8 +60,8 @@ const navigationItems = [
   { label: 'Grades', icon: <GradeIcon />, href: '/admin/grades' },
   { label: 'Announcements', icon: <CampaignIcon />, href: '/admin/announcements' },
   { label: 'UI Components', icon: <PaletteIcon />, href: '/admin/ui-demo' },
-  { label: 'Table Showcase', icon: <BookIcon />, href: '/admin/table-showcase' },
-  { label: 'RMS Patterns', icon: <PaletteIcon />, href: '/admin/rms-patterns-demo' },
+  { label: 'Table Showcase', icon: <GridOnIcon />, href: '/admin/table-showcase' },
+  { label: 'RMS Patterns', icon: <GridViewIcon />, href: '/admin/rms-patterns-demo' },
   { label: 'Settings', icon: <SettingsIcon />, href: '/admin/settings' },
 ]
 
