@@ -94,7 +94,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
       {/* Brand */}
       <Box
         sx={{
-          p: 3,
+          p: 1.5,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -123,7 +123,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
       </Box>
 
       {/* Navigation */}
-      <List sx={{ flex: 1, px: 1.5, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
+      <List sx={{ flex: 1, px: 1, py: 1, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px' }, '&::-webkit-scrollbar-track': { bgcolor: 'transparent' }, '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } } }}>
         {navigationItems.map((item, idx) => {
           const isActive = getActiveStatus(item.href)
           return (
