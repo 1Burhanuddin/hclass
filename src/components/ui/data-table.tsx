@@ -40,8 +40,8 @@ export function DataTable({
   disabled = false,
 }: DataTableProps) {
   return (
-    <TableContainer sx={{ borderRadius: '8px', border: '1px solid #e0e0e0', overflow: 'hidden' }}>
-      <MuiTable>
+    <TableContainer sx={{ borderRadius: '8px', border: '1px solid #e0e0e0', overflow: 'auto', overflowX: 'auto', overflowY: 'auto', maxWidth: '100%' }}>
+      <MuiTable sx={{ minWidth: { xs: '600px', sm: '800px', md: '100%' } }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
             {columns.map((col) => (

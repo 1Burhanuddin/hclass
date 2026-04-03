@@ -185,7 +185,20 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <ListItemIcon sx={{ color: 'inherit', minWidth: sidebarOpen ? 40 : 'auto', justifyContent: 'center', transition: 'all 250ms ease' }}>
                   {item.icon}
                 </ListItemIcon>
-                {sidebarOpen && <ListItemText primary={item.label} primaryTypographyProps={{ fontSize: '0.9rem' }} />}
+                {sidebarOpen && (
+                  <ListItemText 
+                    primary={item.label} 
+                    primaryTypographyProps={{ 
+                      fontSize: '0.9rem',
+                      sx: {
+                        wordBreak: 'break-word',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'normal'
+                      }
+                    }} 
+                  />
+                )}
               </ListItemButton>
             </ListItem>
           )
