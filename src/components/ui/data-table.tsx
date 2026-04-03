@@ -40,19 +40,22 @@ export function DataTable({
   disabled = false,
 }: DataTableProps) {
   return (
-    <TableContainer>
+    <TableContainer sx={{ borderRadius: '8px', border: '1px solid #e0e0e0', overflow: 'hidden' }}>
       <MuiTable>
         <TableHead>
-          <TableRow sx={{ backgroundColor: '#fafafa' }}>
+          <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
             {columns.map((col) => (
               <TableCell
                 key={col.id}
                 sx={{
                   fontWeight: 700,
-                  color: '#1976d2',
+                  color: '#1a1a1a',
                   border: 'none',
+                  borderBottom: '2px solid #e0e0e0',
                   width: col.width,
                   textAlign: col.align || 'left',
+                  backgroundColor: '#f8f9fa',
+                  py: 2,
                 }}
               >
                 {col.label}
@@ -78,14 +81,18 @@ export function DataTable({
                 hover
                 sx={{
                   cursor: disabled ? 'not-allowed' : onRowClick ? 'pointer' : 'default',
-                  '&:hover': { bgcolor: disabled ? 'transparent' : '#fafafa' },
+                  transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover': { 
+                    bgcolor: disabled ? 'transparent' : '#f0f7ff',
+                    boxShadow: disabled ? 'none' : 'inset 0 0 0 1px #e3f2fd'
+                  },
                   borderBottom: '1px solid #f0f0f0',
                   opacity: disabled ? 0.6 : 1,
                   pointerEvents: disabled ? 'none' : 'auto',
                 }}
               >
                 {columns.map((col) => (
-                  <TableCell key={col.id} sx={{ border: 'none', fontWeight: 500 }}>
+                  <TableCell key={col.id} sx={{ border: 'none', fontWeight: 500, color: '#424242', py: 1.5 }}>
                     {col.render ? col.render(row[col.id], row) : row[col.id]}
                   </TableCell>
                 ))}
