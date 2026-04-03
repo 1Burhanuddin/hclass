@@ -40,10 +40,12 @@ interface Batch {
 export default function StudentsManagementPage() {
   const allUsers = useQuery(api.users.getAllUsers)
   const allBatches = useQuery(api.batches.getAllBatches)
+  const allStudentEnrollments = useQuery(api.students.getAllStudents)
   
   const updateUserMutation = useMutation(api.users.updateUserDetails)
   const deactivateUserMutation = useMutation(api.users.deactivateUser)
   const createStudentMutation = useMutation(api.students.createStudent)
+  const updateStudentBatchMutation = useMutation(api.students.updateStudentBatch)
   
   const [openDialog, setOpenDialog] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
@@ -111,6 +113,7 @@ export default function StudentsManagementPage() {
     setEnrollingStudent(s)
     setEnrollData({ selectedBatch: '' })
     setError('')
+    setOpenDialog(false) // Close edit dialog
     setOpenEnrollDialog(true)
   }
 
@@ -124,14 +127,28 @@ export default function StudentsManagementPage() {
       setEnrollLoading(true)
       setError('')
       
-      // Auto-generate unique enrollment number
-      const enrollmentNumber = generateEnrollmentNumber()
+      // Find if student is already enrolled
+      const currentEnrollment = allStudentEnrollments?.find(
+        (se: any) => se.user?._id === enrollingStudent._id
+      )
       
-      await createStudentMutation({
-        userId: enrollingStudent._id as any,
-        batchId: enrollData.selectedBatch as any,
-        enrollmentNumber: enrollmentNumber,
-      })
+      // If student is already enrolled, update their batch; otherwise create new enrollment
+      if (currentEnrollment?.batchId) {
+        // Update existing enrollment
+        await updateStudentBatchMutation({
+          studentId: currentEnrollment._id as any,
+          batchId: enrollData.selectedBatch as any,
+        })
+      } else {
+        // Create new enrollment
+        const enrollmentNumber = generateEnrollmentNumber()
+        
+        await createStudentMutation({
+          userId: enrollingStudent._id as any,
+          batchId: enrollData.selectedBatch as any,
+          enrollmentNumber: enrollmentNumber,
+        })
+      }
       
       setOpenEnrollDialog(false)
       setEnrollLoading(false)
@@ -294,62 +311,81 @@ export default function StudentsManagementPage() {
       </Dialog>
 
       {/* Enroll Student Dialog */}
-      <Dialog open={openEnrollDialog} onClose={() => setOpenEnrollDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>Enroll Student in Batch</DialogTitle>
-        <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-          {error && <Alert severity="error">{error}</Alert>}
-          <Typography sx={{ color: '#666', fontWeight: 500 }}>
-            Student: <strong>{enrollingStudent?.name}</strong>
-          </Typography>
-          
-          <FormControl fullWidth disabled={enrollLoading}>
-            <InputLabel>Select Batch</InputLabel>
-            <Select
-              value={enrollData.selectedBatch}
-              label="Select Batch"
-              onChange={(e) => setEnrollData({ ...enrollData, selectedBatch: e.target.value })}
-              sx={{
-                borderRadius: '12px',
-              }}
-            >
-              {allBatches?.map((batch: any) => (
-                <MenuItem key={batch._id} value={batch._id}>
-                  {batch.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      {(() => {
+        const currentEnrollment = allStudentEnrollments?.find(
+          (se: any) => se.user?._id === enrollingStudent?._id
+        )
+        return (
+          <Dialog open={openEnrollDialog} onClose={() => setOpenEnrollDialog(false)} maxWidth="sm" fullWidth>
+            <DialogTitle sx={{ fontWeight: 700, color: '#1976d2', pb: 1 }}>
+              {currentEnrollment?.batchId ? 'Update Student Batch' : 'Enroll Student in Batch'}
+            </DialogTitle>
+            <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              {error && <Alert severity="error">{error}</Alert>}
+              <Typography sx={{ color: '#666', fontWeight: 500 }}>
+                Student: <strong>{enrollingStudent?.name}</strong>
+              </Typography>
+              
+              {currentEnrollment?.batchId && (
+                <Alert severity="info" sx={{ borderRadius: '8px' }}>
+                  <Typography variant="body2">
+                    <strong>Current Enrollment:</strong> {currentEnrollment.batch?.name || 'Loading...'}
+                  </Typography>
+                </Alert>
+              )}
+              
+              <FormControl fullWidth disabled={enrollLoading}>
+                <InputLabel>Select Batch</InputLabel>
+                <Select
+                  value={enrollData.selectedBatch || (currentEnrollment?.batchId || '')}
+                  label="Select Batch"
+                  onChange={(e) => setEnrollData({ ...enrollData, selectedBatch: e.target.value })}
+                  sx={{
+                    borderRadius: '12px',
+                  }}
+                >
+                  {allBatches?.map((batch: any) => (
+                    <MenuItem key={batch._id} value={batch._id}>
+                      {batch.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-          <Alert severity="info" sx={{ borderRadius: '8px' }}>
-            <Typography variant="caption">
-              Enrollment number will be automatically generated upon saving.
-            </Typography>
-          </Alert>
-        </DialogContent>
-        <DialogActions sx={{ p: 2, gap: 1 }}>
-          <Button
-            onClick={() => setOpenEnrollDialog(false)}
-            sx={{ borderRadius: '8px', py: 1, px: 2 }}
-            disabled={enrollLoading}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSaveEnrollment}
-            variant="contained" 
-            sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
-            disabled={enrollLoading}
-          >
-            {enrollLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                <CircularProgress size={18} sx={{ color: 'inherit' }} /> Enrolling...
-              </Box>
-            ) : (
-              'Enroll'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
+              <Alert severity="info" sx={{ borderRadius: '8px' }}>
+                <Typography variant="caption">
+                  {currentEnrollment?.batchId 
+                    ? 'Select a batch to update the student\'s enrollment.'
+                    : 'Enrollment number will be automatically generated upon saving.'}
+                </Typography>
+              </Alert>
+            </DialogContent>
+            <DialogActions sx={{ p: 2, gap: 1 }}>
+              <Button
+                onClick={() => setOpenEnrollDialog(false)}
+                sx={{ borderRadius: '8px', py: 1, px: 2 }}
+                disabled={enrollLoading}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSaveEnrollment}
+                variant="contained" 
+                sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
+                disabled={enrollLoading}
+              >
+                {enrollLoading ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                    <CircularProgress size={18} sx={{ color: 'inherit' }} /> {currentEnrollment?.batchId ? 'Updating...' : 'Enrolling...'}
+                  </Box>
+                ) : (
+                  currentEnrollment?.batchId ? 'Update Batch' : 'Enroll'
+                )}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )
+      })()}
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)} maxWidth="sm">
