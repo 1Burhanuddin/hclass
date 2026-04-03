@@ -224,7 +224,19 @@ export default function ManageStudentFeesPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={feeDialogOpen} onClose={() => setFeeDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog 
+        open={feeDialogOpen} 
+        onClose={() => setFeeDialogOpen(false)} 
+        maxWidth="sm" 
+        fullWidth
+        sx={{ zIndex: 1400 }}
+        PaperProps={{
+          sx: { zIndex: 1400 }
+        }}
+        BackdropProps={{
+          sx: { zIndex: 1399 }
+        }}
+      >
         <DialogTitle>
           {selectedStudent?.fees ? 'Edit Student Fees' : 'Set Student Fees'}
         </DialogTitle>

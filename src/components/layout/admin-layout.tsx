@@ -182,13 +182,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } },
           bgcolor: '#f9f9f9',
           borderRight: '1px solid #f0f0f0',
+          zIndex: 100,
         }}
       >
         {sidebarContent}
       </Box>
 
       {/* Mobile Drawer */}
-      <Drawer anchor="left" open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)}>
+      <Drawer anchor="left" open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} sx={{ zIndex: 1100 }}>
         <Box sx={{ width: 280 }}>{sidebarContent}</Box>
       </Drawer>
 
