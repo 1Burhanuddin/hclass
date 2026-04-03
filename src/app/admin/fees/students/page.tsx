@@ -165,7 +165,6 @@ export default function ManageStudentFeesPage() {
             <EnhancedTable
               columns={[
                 { id: 'studentName', label: 'Student Name', minWidth: 180, sortable: true },
-                { id: 'studentEmail', label: 'Email', minWidth: 200, sortable: true },
                 { id: 'batchName', label: 'Batch', minWidth: 130, sortable: true },
               {
                 id: 'totalFees',
