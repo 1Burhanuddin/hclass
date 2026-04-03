@@ -192,6 +192,39 @@ export const deactivateUser = mutation({
   },
 })
 
+// Reactivate user (restore from soft delete)
+export const reactivateUser = mutation({
+  args: {
+    userId: v.id('users'),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    await ctx.db.patch(args.userId, {
+      isActive: true,
+      deletedAt: undefined,
+    })
+
+    return { success: true }
+  },
+})
+
+// Get all deleted (soft-deleted) users
+export const getDeletedUsers = query({
+  handler: async (ctx) => {
+    const deletedUsers = await ctx.db
+      .query('users')
+      .filter((q) => q.neq(q.field('deletedAt'), undefined))
+      .collect()
+
+    return deletedUsers
+  },
+})
+
 // Delete user (hard delete - use with caution)
 export const deleteUser = mutation({
   args: {
