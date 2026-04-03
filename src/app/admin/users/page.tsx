@@ -15,6 +15,8 @@ import {
   Chip,
   CircularProgress,
   Typography,
+  Switch,
+  FormControlLabel,
 } from '@mui/material'
 import { useToast } from '@/hooks/useToast'
 import { ToastDisplay } from '@/components/shared/ToastDisplay'
@@ -27,6 +29,7 @@ interface User {
   email: string
   role: 'admin' | 'teacher' | 'student'
   isActive: boolean
+  deletedAt?: number
   createdAt: number
 }
 
@@ -35,12 +38,15 @@ export default function UsersManagementPage() {
   
   const updateUserMutation = useMutation(api.users.updateUserDetails)
   const deactivateUserMutation = useMutation(api.users.deactivateUser)
+  const reactivateUserMutation = useMutation(api.users.reactivateUser)
   
   const { toast, showToast, closeToast } = useToast()
 
   const [openDialog, setOpenDialog] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [openRestoreDialog, setOpenRestoreDialog] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [showDeleted, setShowDeleted] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,6 +54,7 @@ export default function UsersManagementPage() {
   })
   const [saveLoading, setSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [restoreLoading, setRestoreLoading] = useState(false)
 
   const handleEditUser = (u: User) => {
     setEditingUser(u)
@@ -105,6 +112,35 @@ export default function UsersManagementPage() {
     }
   }
 
+  const handleRestoreUser = (u: User) => {
+    setEditingUser(u)
+    setOpenRestoreDialog(true)
+  }
+
+  const handleConfirmRestore = async () => {
+    if (!editingUser) return
+    
+    try {
+      setRestoreLoading(true)
+      
+      await reactivateUserMutation({
+        userId: editingUser._id as any,
+      })
+      
+      showToast('User restored successfully', 'success')
+      setOpenRestoreDialog(false)
+      setRestoreLoading(false)
+    } catch (err: any) {
+      showToast(err.message || 'Failed to restore user', 'error')
+      setRestoreLoading(false)
+    }
+  }
+
+  // Filter users based on deleted status
+  const displayedUsers = showDeleted 
+    ? (allUsers?.filter((u) => u.deletedAt !== undefined) || [])
+    : (allUsers?.filter((u) => u.deletedAt === undefined) || [])
+
   const tableColumns = [
     { id: 'name', label: 'Name' },
     { id: 'email', label: 'Email' },
@@ -154,17 +190,26 @@ export default function UsersManagementPage() {
               Users Management
             </Typography>
             <Typography variant="body2" sx={{ color: '#666' }}>
-              Manage system users ({allUsers?.length || 0} total)
+              {showDeleted 
+                ? `Manage deleted users (${displayedUsers?.length || 0} total)` 
+                : `Manage active users (${displayedUsers?.length || 0} total)`}
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{ borderRadius: '8px' }}
-            disabled
-          >
-            Add User
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <FormControlLabel
+              control={<Switch checked={showDeleted} onChange={(e) => setShowDeleted(e.target.checked)} />}
+              label="Show Deleted"
+              sx={{ fontWeight: 500 }}
+            />
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              sx={{ borderRadius: '8px' }}
+              disabled
+            >
+              Add User
+            </Button>
+          </Box>
         </Box>
       </Grid>
 
@@ -173,9 +218,9 @@ export default function UsersManagementPage() {
         <DataCard>
           <DataTable
             columns={tableColumns}
-            data={allUsers || []}
+            data={displayedUsers || []}
             loading={!allUsers}
-            disabled={saveLoading || deleteLoading}
+            disabled={saveLoading || deleteLoading || restoreLoading}
             onRowClick={handleEditUser}
             emptyMessage="No users found. Users will appear here after they sign up."
           />
@@ -230,37 +275,67 @@ export default function UsersManagementPage() {
           </TextField>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 1 }}>
-          <Button
-            onClick={() => setOpenDeleteDialog(true)}
-            variant="outlined"
-            color="error"
-            sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
-            disabled={saveLoading || deleteLoading}
-          >
-            Delete
-          </Button>
-          <Box sx={{ flex: 1 }} />
-          <Button
-            onClick={() => setOpenDialog(false)}
-            sx={{ borderRadius: '8px', py: 1, px: 2 }}
-            disabled={saveLoading || deleteLoading}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSaveUser}
-            variant="contained" 
-            sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
-            disabled={saveLoading || deleteLoading}
-          >
-            {saveLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                <CircularProgress size={18} sx={{ color: 'inherit' }} /> Saving...
-              </Box>
-            ) : (
-              'Save'
-            )}
-          </Button>
+          {!editingUser?.deletedAt ? (
+            <>
+              <Button
+                onClick={() => setOpenDeleteDialog(true)}
+                variant="outlined"
+                color="error"
+                sx={{ borderRadius: '8px', py: 1, px: 2, textTransform: 'none' }}
+                disabled={saveLoading || deleteLoading}
+              >
+                Delete
+              </Button>
+              <Box sx={{ flex: 1 }} />
+              <Button
+                onClick={() => setOpenDialog(false)}
+                sx={{ borderRadius: '8px', py: 1, px: 2 }}
+                disabled={saveLoading || deleteLoading}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSaveUser}
+                variant="contained" 
+                sx={{ borderRadius: '8px', py: 1, px: 3, minWidth: '100px' }} 
+                disabled={saveLoading || deleteLoading}
+              >
+                {saveLoading ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                    <CircularProgress size={18} sx={{ color: 'inherit' }} /> Saving...
+                  </Box>
+                ) : (
+                  'Save'
+                )}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => handleRestoreUser(editingUser!)}
+                variant="outlined"
+                sx={{ 
+                  borderRadius: '8px', 
+                  py: 1, 
+                  px: 2, 
+                  textTransform: 'none',
+                  color: '#2e7d32',
+                  borderColor: '#2e7d32',
+                }}
+                disabled={restoreLoading}
+              >
+                Restore
+              </Button>
+              <Box sx={{ flex: 1 }} />
+              <Button
+                onClick={() => setOpenDialog(false)}
+                sx={{ borderRadius: '8px', py: 1, px: 2 }}
+                disabled={restoreLoading}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
 
@@ -293,6 +368,46 @@ export default function UsersManagementPage() {
               </Box>
             ) : (
               'Delete'
+            )}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Restore Confirmation Dialog */}
+      <Dialog open={openRestoreDialog} onClose={() => setOpenRestoreDialog(false)} maxWidth="sm">
+        <DialogTitle sx={{ fontWeight: 700, color: '#2e7d32', pb: 1 }}>Restore User</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <Typography>
+            Are you sure you want to restore <strong>{editingUser?.name}</strong>? This will re-activate their account and they will appear in the user list.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          <Button 
+            onClick={() => setOpenRestoreDialog(false)}
+            sx={{ borderRadius: '8px', py: 1, px: 2 }} 
+            disabled={restoreLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmRestore}
+            variant="contained"
+            sx={{ 
+              borderRadius: '8px', 
+              py: 1, 
+              px: 3, 
+              minWidth: '100px',
+              backgroundColor: '#2e7d32',
+              '&:hover': { backgroundColor: '#1b5e20' },
+            }}
+            disabled={restoreLoading}
+          >
+            {restoreLoading ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                <CircularProgress size={18} sx={{ color: 'inherit' }} /> Restoring...
+              </Box>
+            ) : (
+              'Restore'
             )}
           </Button>
         </DialogActions>

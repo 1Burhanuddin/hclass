@@ -30,6 +30,7 @@ interface Teacher {
   email: string
   role: 'teacher'
   isActive: boolean
+  deletedAt?: number
   createdAt: number
   primarySubjectId?: string
 }

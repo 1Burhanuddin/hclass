@@ -35,7 +35,6 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import PaletteIcon from '@mui/icons-material/Palette'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptIcon from '@mui/icons-material/Receipt'
-import RestoreIcon from '@mui/icons-material/Restore'
 import { EnhancedHeader } from '../EnhancedHeader'
 
 interface AdminLayoutProps {
@@ -47,7 +46,6 @@ const navigationItems = [
   { label: 'Users', icon: <GroupIcon />, href: '/admin/users' },
   { label: 'Teachers', icon: <PersonIcon />, href: '/admin/teachers' },
   { label: 'Students', icon: <PersonIcon />, href: '/admin/students' },
-  { label: 'Deleted Students', icon: <RestoreIcon />, href: '/admin/deleted-students' },
   { label: 'Batches', icon: <ClassIcon />, href: '/admin/batches' },
   { label: 'Subjects', icon: <BookIcon />, href: '/admin/subjects' },
   { label: 'Mappings', icon: <PersonIcon />, href: '/admin/mapping' },
