@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@mui/material';
 
-import { useState, ReactNode, useEffect } from 'react';
+import { useState, ReactNode, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -47,7 +47,24 @@ export function StudentLayout({ children }: StudentLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [notificationsMenuOpen, setNotificationsMenuOpen] = useState<null | HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  // Handle scroll for sidebar shrinking
+  useEffect(() => {
+    const handleScroll = () => {
+      if (contentRef.current) {
+        setIsScrolled(contentRef.current.scrollTop > 0);
+      }
+    };
+
+    const element = contentRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+      return () => element.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   // Sample notifications
   const notifications = [
@@ -191,9 +208,9 @@ export function StudentLayout({ children }: StudentLayoutProps) {
       {/* Sidebar - Desktop */}
       <Box
         sx={{
-          width: sidebarOpen ? 280 : 80,
-          minWidth: sidebarOpen ? 280 : 80,
-          maxWidth: sidebarOpen ? 280 : 80,
+          width: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
+          minWidth: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
+          maxWidth: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
@@ -210,6 +227,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
           },
           bgcolor: '#ffffff',
           borderRight: '1px solid #e0e0e0',
+          borderBottomRightRadius: '16px',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
           zIndex: 100,
         }}
@@ -306,7 +324,10 @@ export function StudentLayout({ children }: StudentLayoutProps) {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', overflowX: 'hidden', p: { xs: 2, md: 4 }, width: '100%' }}>
+        <Box 
+          ref={contentRef}
+          sx={{ flex: 1, overflow: 'auto', overflowX: 'hidden', p: { xs: 2, md: 4 }, width: '100%' }}
+        >
           {children}
         </Box>
       </Box>

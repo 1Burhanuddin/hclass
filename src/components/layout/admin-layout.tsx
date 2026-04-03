@@ -13,9 +13,10 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  useScrollTrigger,
 } from '@mui/material'
 
-import { useState, ReactNode, useEffect } from 'react'
+import { useState, ReactNode, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { UserButton } from '@clerk/nextjs'
@@ -65,7 +66,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [notificationsMenuOpen, setNotificationsMenuOpen] = useState<null | HTMLElement>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+
+  // Handle scroll for sidebar shrinking
+  useEffect(() => {
+    const handleScroll = () => {
+      if (contentRef.current) {
+        setIsScrolled(contentRef.current.scrollTop > 0)
+      }
+    }
+
+    const element = contentRef.current
+    if (element) {
+      element.addEventListener('scroll', handleScroll)
+      return () => element.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   // Sample notifications
   const notifications = [
@@ -179,9 +197,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Sidebar - Desktop */}
       <Box
         sx={{
-          width: sidebarOpen ? 280 : 80,
-          minWidth: sidebarOpen ? 280 : 80,
-          maxWidth: sidebarOpen ? 280 : 80,
+          width: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
+          minWidth: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
+          maxWidth: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
@@ -194,6 +212,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } },
           bgcolor: '#ffffff',
           borderRight: '1px solid #e0e0e0',
+          borderBottomRightRadius: '16px',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
           zIndex: 100,
         }}
@@ -274,14 +293,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </EnhancedHeader>
 
         {/* Content */}
-        <Box sx={{ 
-          flex: 1, 
-          overflow: 'auto', 
-          overflowX: 'hidden', 
-          p: { xs: 2, sm: 3, md: 4 }, 
-          width: '100%',
-          backgroundColor: '#fafafa',
-        }}>
+        <Box 
+          ref={contentRef}
+          sx={{ 
+            flex: 1, 
+            overflow: 'auto', 
+            overflowX: 'hidden', 
+            p: { xs: 2, sm: 3, md: 4 }, 
+            width: '100%',
+            backgroundColor: '#fafafa',
+          }}
+        >
           {children}
         </Box>
       </Box>

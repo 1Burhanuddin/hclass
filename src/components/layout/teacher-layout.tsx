@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@mui/material'
 
-import { useState, ReactNode, useEffect } from 'react'
+import { useState, ReactNode, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -43,7 +43,24 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [notificationsMenuOpen, setNotificationsMenuOpen] = useState<null | HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+
+  // Handle scroll for sidebar shrinking
+  useEffect(() => {
+    const handleScroll = () => {
+      if (contentRef.current) {
+        setIsScrolled(contentRef.current.scrollTop > 0)
+      }
+    }
+
+    const element = contentRef.current
+    if (element) {
+      element.addEventListener('scroll', handleScroll)
+      return () => element.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   // Sample notifications
   const notifications = [
@@ -145,7 +162,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
       {/* Sidebar - Desktop */}
       <Box
         sx={{
-          width: sidebarOpen ? 280 : 80,
+          width: sidebarOpen ? (isScrolled ? 240 : 280) : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
@@ -157,6 +174,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
           '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } },
           bgcolor: '#f9f9f9',
           borderRight: '1px solid #f0f0f0',
+          borderBottomRightRadius: '16px',
         }}
       >
         {sidebarContent}
@@ -245,7 +263,10 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 4 } }}>
+        <Box 
+          ref={contentRef}
+          sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 4 } }}
+        >
           {children}
         </Box>
       </Box>
