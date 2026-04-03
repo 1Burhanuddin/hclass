@@ -112,7 +112,8 @@ export function createAppTheme(): Theme {
               borderColor: '#001a4d',
             },
             '&.Mui-focused': {
-              boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+              boxShadow: 'none',
+              borderColor: '#001a4d',
             },
           },
         },
@@ -128,7 +129,8 @@ export function createAppTheme(): Theme {
               borderColor: '#001a4d',
             },
             '&.Mui-focused': {
-              boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+              boxShadow: 'none',
+              borderColor: '#001a4d',
             },
           },
         },
@@ -154,7 +156,8 @@ export function createAppTheme(): Theme {
             borderColor: '#001a4d',
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            boxShadow: '0 0 0 3px rgba(0, 26, 77, 0.1)',
+            boxShadow: 'none',
+            borderColor: '#001a4d',
           },
         },
         notchedOutline: {

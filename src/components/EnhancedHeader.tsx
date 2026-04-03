@@ -64,6 +64,10 @@ export function EnhancedHeader({
         borderColor: '#e0e0e0',
         transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
         borderRadius: '0',
+        minHeight: { xs: 56, md: 64 },
+      }}
+      style={{
+        minHeight: trigger ? 48 : undefined,
       }}
     >
       <Toolbar
@@ -73,7 +77,8 @@ export function EnhancedHeader({
           alignItems: 'center',
           px: { xs: 2, md: 3 },
           gap: 2,
-          minHeight: { xs: 56, md: 64 },
+          minHeight: 'inherit',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {children}
