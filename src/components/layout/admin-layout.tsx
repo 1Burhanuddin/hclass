@@ -171,13 +171,16 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Sidebar - Desktop */}
       <Box
         sx={{
-          width: sidebarOpen ? 320 : 80,
+          width: sidebarOpen ? 280 : 80,
+          minWidth: sidebarOpen ? 280 : 80,
+          maxWidth: sidebarOpen ? 280 : 80,
           height: '100vh',
           position: 'sticky',
           top: 0,
           display: { xs: 'none', md: 'block' },
-          transition: 'width 0.3s ease',
+          transition: 'all 0.3s ease',
           overflow: 'auto',
+          flexShrink: 0,
           '&::-webkit-scrollbar': { width: '6px' },
           '&::-webkit-scrollbar-track': { bgcolor: 'transparent' },
           '&::-webkit-scrollbar-thumb': { bgcolor: '#ccc', borderRadius: '3px', '&:hover': { bgcolor: '#999' } },
