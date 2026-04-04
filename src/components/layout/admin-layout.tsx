@@ -43,6 +43,7 @@ interface AdminLayoutProps {
 
 const navigationItems = [
   { label: 'Dashboard', icon: <HomeIcon />, href: '/admin/dashboard' },
+  { label: 'Pending Users', icon: <GroupIcon />, href: '/admin/pending-users' },
   { label: 'Users', icon: <GroupIcon />, href: '/admin/users' },
   { label: 'Teachers', icon: <PersonIcon />, href: '/admin/teachers' },
   { label: 'Students', icon: <PersonIcon />, href: '/admin/students' },
