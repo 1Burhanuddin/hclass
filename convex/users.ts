@@ -83,7 +83,7 @@ export const createUser = mutation({
       name: args.name,
       email: args.email,
       role: role as 'admin' | undefined,
-      status: status as 'approved' | 'pending',
+      status: status as 'approved' | 'pending' | undefined,
       isActive: isFirstUser,
       profileImage: undefined,
       createdAt: Date.now(),
