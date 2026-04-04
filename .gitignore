@@ -7,6 +7,5 @@ node_modules/
 dist/
 build/
 .convex/
-convex/_generated/
 .turbo/
 .vercel/
