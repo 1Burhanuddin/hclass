@@ -29,6 +29,18 @@ export default function DashboardPage() {
     // If still loading data, wait
     if (isLoadingData) return
 
+    // Check if user is pending approval
+    if (userProfile.status === 'pending') {
+      router.push('/role-select')
+      return
+    }
+
+    // Check if user is rejected
+    if (userProfile.status === 'rejected') {
+      router.push('/role-select')
+      return
+    }
+
     // Check if user has a role assigned
     if (!userProfile.role) {
       router.push('/role-select')

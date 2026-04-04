@@ -6,13 +6,15 @@ export default defineSchema({
     clerkId: v.string(),
     name: v.string(),
     email: v.string(),
-    role: v.union(v.literal('admin'), v.literal('teacher'), v.literal('student')),
+    role: v.optional(v.union(v.literal('admin'), v.literal('teacher'), v.literal('student'))),
+    status: v.union(v.literal('pending'), v.literal('approved'), v.literal('rejected')),
     profileImage: v.optional(v.string()),
     isActive: v.boolean(),
     deletedAt: v.optional(v.number()),
     createdAt: v.number(),
   })
-    .index('by_clerkId', ['clerkId']),
+    .index('by_clerkId', ['clerkId'])
+    .index('by_status', ['status']),
 
   batches: defineTable({
     name: v.string(),

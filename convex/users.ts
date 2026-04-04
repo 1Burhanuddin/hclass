@@ -69,24 +69,27 @@ export const createUser = mutation({
       .first()
 
     if (existingUser) {
-      return { userId: existingUser._id, role: existingUser.role }
+      return { userId: existingUser._id, role: existingUser.role, status: existingUser.status }
     }
 
-    // Check if this is the first user - make them admin
+    // Check if this is the first user - make them admin with approved status
     const allUsers = await ctx.db.query('users').collect()
-    const role = allUsers.length === 0 ? 'admin' : 'student' // Default to student
+    const isFirstUser = allUsers.length === 0
+    const role = isFirstUser ? 'admin' : undefined
+    const status = isFirstUser ? 'approved' : 'pending'
 
     const userId = await ctx.db.insert('users', {
       clerkId: args.clerkId,
       name: args.name,
       email: args.email,
-      role: role as 'admin' | 'teacher' | 'student',
-      isActive: true,
+      role: role as 'admin' | undefined,
+      status: status as 'approved' | 'pending',
+      isActive: isFirstUser,
       profileImage: undefined,
       createdAt: Date.now(),
     })
 
-    return { userId, role }
+    return { userId, role, status }
   },
 })
 
@@ -108,6 +111,8 @@ export const updateUserRole = mutation({
 
     await ctx.db.patch(user._id, {
       role: args.role,
+      status: 'approved',
+      isActive: true,
     })
 
     // If role is being changed to teacher, create teacher record if it doesn't exist
@@ -220,6 +225,83 @@ export const deleteUser = mutation({
     }
 
     await ctx.db.delete(args.userId)
+    return { success: true }
+  },
+})
+
+// Get pending users (waiting for approval)
+export const getPendingUsers = query({
+  handler: async (ctx) => {
+    return await ctx.db
+      .query('users')
+      .withIndex('by_status', (q) => q.eq('status', 'pending'))
+      .collect()
+  },
+})
+
+// Approve user and assign role
+export const approveUser = mutation({
+  args: {
+    userId: v.id('users'),
+    role: v.union(v.literal('admin'), v.literal('teacher'), v.literal('student')),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    if (user.status !== 'pending') {
+      throw new Error('Only pending users can be approved')
+    }
+
+    await ctx.db.patch(args.userId, {
+      role: args.role,
+      status: 'approved',
+      isActive: true,
+    })
+
+    // If role is teacher, create teacher record
+    if (args.role === 'teacher') {
+      const existingTeacher = await ctx.db
+        .query('teachers')
+        .filter((q) => q.eq(q.field('userId'), args.userId))
+        .first()
+
+      if (!existingTeacher) {
+        await ctx.db.insert('teachers', {
+          userId: args.userId,
+          qualification: 'Not specified',
+          joinDate: Date.now(),
+        })
+      }
+    }
+
+    return { success: true }
+  },
+})
+
+// Reject user
+export const rejectUser = mutation({
+  args: {
+    userId: v.id('users'),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    if (user.status !== 'pending') {
+      throw new Error('Only pending users can be rejected')
+    }
+
+    await ctx.db.patch(args.userId, {
+      status: 'rejected',
+    })
+
     return { success: true }
   },
 })
