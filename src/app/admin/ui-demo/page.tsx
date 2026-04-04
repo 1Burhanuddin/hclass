@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import EnhancedTable, { EnhancedTableColumn } from '@/components/EnhancedTable'
+import { DataCard } from '@/components/ui'
 
 export default function UIDemoPage() {
   const [openDialog, setOpenDialog] = useState(false)

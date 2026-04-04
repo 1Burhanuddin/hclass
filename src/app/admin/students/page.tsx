@@ -41,10 +41,9 @@ export default function StudentsManagementPage() {
   const allUsers = useQuery(api.users.getAllUsers)
   const allBatches = useQuery(api.batches.getAllBatches)
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
-  const currentStudentEnrollment = useQuery(
-    selectedUserId ? api.students.getStudentByUserId : null,
-    selectedUserId ? { userId: selectedUserId as any } : 'skip'
-  )
+  const currentStudentEnrollment = selectedUserId 
+    ? useQuery(api.students.getStudentByUserId, { userId: selectedUserId as any })
+    : null
   
   const updateUserMutation = useMutation(api.users.updateUserDetails)
   const deactivateUserMutation = useMutation(api.users.deactivateUser)
@@ -137,7 +136,7 @@ export default function StudentsManagementPage() {
         // Update existing enrollment
         await updateStudentBatchMutation({
           studentId: currentStudentEnrollment._id as any,
-          newBatchId: enrollData.selectedBatch as any,
+          batchId: enrollData.selectedBatch as any,
         })
       } else {
         // Create new enrollment

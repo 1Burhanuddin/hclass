@@ -140,8 +140,8 @@ export default function TeachersManagementPage() {
       minWidth: 150,
       sortable: true,
       filterable: true,
-      format: (value: any, row: Teacher) => {
-        const teacherRecord = allTeachers?.find((tr: any) => tr.userId === row._id)
+      format: (value: any) => {
+        const teacherRecord = allTeachers?.find((tr: any) => tr.userId === value)
         if (!teacherRecord?.primarySubjectId) return <span style={{ color: '#999' }}>—</span>
         const subject = subjects?.find((s: any) => s._id === teacherRecord.primarySubjectId)
         return subject ? subject.name : '—'
