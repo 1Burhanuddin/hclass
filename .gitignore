@@ -9,3 +9,4 @@ build/
 .convex/
 .turbo/
 .vercel/
+.env
