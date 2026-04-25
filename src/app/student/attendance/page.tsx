@@ -35,7 +35,7 @@ export default function StudentAttendancePage() {
   )
 
   const batchSubjects = useQuery(
-    api.batchSubjects.getBatchSubjectsByBatchId,
+    api.batchSubjects.getBatchSubjectsByBatchIdWithDetails,
     student?.batchId ? { batchId: student.batchId } : 'skip'
   )
 
@@ -127,11 +127,12 @@ export default function StudentAttendancePage() {
               </TableHead>
               <TableBody>
                 {[...attendance].sort((a: any, b: any) => b.date - a.date).map((record: any) => {
-                  const subject = batchSubjects.find((bs: any) => bs._id === record.batchSubjectId)?.subject
+                  const bs = batchSubjects.find((bs: any) => bs._id === record.batchSubjectId)
+                  const subjectName = bs?.subject?.name || 'Unknown'
                   return (
                     <TableRow key={record._id}>
                       <TableCell>{new Date(record.date).toLocaleDateString()}</TableCell>
-                      <TableCell>{subject?.name || 'Unknown'}</TableCell>
+                      <TableCell>{subjectName}</TableCell>
                       <TableCell>
                         <Chip 
                           label={record.status.charAt(0).toUpperCase() + record.status.slice(1)} 

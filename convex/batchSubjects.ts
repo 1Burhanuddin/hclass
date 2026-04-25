@@ -19,6 +19,31 @@ export const getBatchSubjectsByBatchId = query({
   },
 })
 
+// Get by batch ID with details
+export const getBatchSubjectsByBatchIdWithDetails = query({
+  args: { batchId: v.id('batches') },
+  handler: async (ctx, args) => {
+    const batchSubjects = await ctx.db
+      .query('batchSubjects')
+      .filter((q) => q.eq(q.field('batchId'), args.batchId))
+      .collect()
+
+    const enriched = await Promise.all(
+      batchSubjects.map(async (bs) => {
+        const batch = await ctx.db.get(bs.batchId)
+        const subject = await ctx.db.get(bs.subjectId)
+        return {
+          ...bs,
+          batch,
+          subject,
+        }
+      })
+    )
+
+    return enriched
+  },
+})
+
 // Get by subject ID
 export const getBatchSubjectsBySubjectId = query({
   args: { subjectId: v.id('subjects') },
