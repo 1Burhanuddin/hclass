@@ -30,6 +30,7 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import GradeIcon from '@mui/icons-material/Grade';
 import Link from 'next/link';
 
 interface TabPanelProps {
