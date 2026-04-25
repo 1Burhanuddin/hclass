@@ -31,6 +31,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import EventIcon from '@mui/icons-material/Event';
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
 export default function StudentDashboard() {
   const { user, isLoaded } = useUser();
