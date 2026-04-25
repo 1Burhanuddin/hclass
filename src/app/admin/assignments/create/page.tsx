@@ -25,6 +25,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { format, addDays } from 'date-fns'
 import NProgress from 'nprogress'
 import { DataCard } from '@/components/ui'
+import { useFileUpload } from '@/hooks/useFileUpload'
 
 export default function CreateAssignmentPage() {
   const router = useRouter()
@@ -37,7 +38,9 @@ export default function CreateAssignmentPage() {
     subjectId: '',
     title: '',
     description: '',
+    dueDate: '',
   })
+  const { uploadFile } = useFileUpload()
 
   // Get teacher record
   const userRecord = useQuery(
@@ -136,12 +139,20 @@ export default function CreateAssignmentPage() {
     }
 
     try {
+      let attachmentUrl = undefined
+      if (attachmentFile) {
+        setLoading(true)
+        const { storageId } = await uploadFile(attachmentFile)
+        attachmentUrl = storageId
+      }
+
       await createAssignmentMutation({
         batchSubjectId: batchSubjectId as any,
         teacherId: applicableTeacherId as any,
         title: formData.title,
         description: formData.description,
-        attachmentUrl: attachmentFile ? attachmentFile.name : undefined,
+        dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
+        attachmentUrl,
       })
 
       setError('')

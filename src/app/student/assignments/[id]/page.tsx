@@ -36,7 +36,7 @@ export default function StudentAssignmentDetailPage() {
     assignmentId: assignmentId as any,
   })
 
-  if (!assignment) {
+  if (assignment === undefined) {
     return (
       <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
         <CircularProgress />
@@ -44,29 +44,13 @@ export default function StudentAssignmentDetailPage() {
     )
   }
 
-  const getAssignmentStatus = (dueDate: number) => {
-    const now = Date.now()
-    if (dueDate < now) return 'overdue'
-    if (dueDate - now < 7 * 24 * 60 * 60 * 1000) return 'pending'
-    return 'upcoming'
+  if (assignment === null) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">Study material not found</Alert>
+      </Box>
+    )
   }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'overdue':
-        return '#d32f2f'
-      case 'pending':
-        return '#f57c00'
-      case 'upcoming':
-        return '#388e3c'
-      default:
-        return '#1976d2'
-    }
-  }
-
-  const status = getAssignmentStatus(assignment.dueDate)
-  const isOverdue = status === 'overdue'
-  const daysRemaining = Math.ceil((assignment.dueDate - Date.now()) / (24 * 60 * 60 * 1000))
 
   return (
     <Box sx={{ p: 3 }}>
@@ -82,7 +66,7 @@ export default function StudentAssignmentDetailPage() {
         >
           Back
         </Button>
-        <Typography variant="h4" sx={{ flex: 1 }}>
+        <Typography variant="h4" sx={{ flex: 1, fontWeight: 'bold' }}>
           {assignment.title}
         </Typography>
       </Box>
@@ -101,24 +85,41 @@ export default function StudentAssignmentDetailPage() {
               </Typography>
             </Box>
 
-            <Divider sx={{ my: 4 }} />
-
-            {/* Attachment Section */}
             {assignment.attachmentUrl && (
-              <Box>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Attachments
-                </Typography>
-                <Button
-                  variant="outlined"
-                  startIcon={<DownloadIcon />}
-                  href={assignment.attachmentUrl}
-                  target="_blank"
-                  sx={{ borderRadius: '8px' }}
-                >
-                  Download Assignment File
-                </Button>
-              </Box>
+              <>
+                <Divider sx={{ my: 4 }} />
+                <Box>
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                    Study Material Preview
+                  </Typography>
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: '700px', 
+                    bgcolor: '#f5f5f5', 
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    border: '1px solid #ddd',
+                    mb: 4
+                  }}>
+                    <iframe
+                      src={`${assignment.attachmentUrl}#toolbar=0`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 'none' }}
+                      title="File Preview"
+                    />
+                  </Box>
+                  <Button
+                    variant="contained"
+                    startIcon={<DownloadIcon />}
+                    href={assignment.attachmentUrl}
+                    target="_blank"
+                    sx={{ borderRadius: '8px' }}
+                  >
+                    Download File
+                  </Button>
+                </Box>
+              </>
             )}
           </DataCard>
         </Grid>
@@ -131,38 +132,38 @@ export default function StudentAssignmentDetailPage() {
               <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
                 SUBJECT
               </Typography>
-              <Typography variant="body1">{assignment.subject?.name}</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>{assignment.subject?.name}</Typography>
             </Box>
 
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
                 BATCH
               </Typography>
-              <Typography variant="body1">{assignment.batch?.name}</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>{assignment.batch?.name}</Typography>
             </Box>
 
             <Divider sx={{ my: 3 }} />
 
-            {/* Due Date Status */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
-                DUE DATE
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                {format(new Date(assignment.dueDate), 'MMM dd, yyyy • HH:mm')}
-              </Typography>
-              <Chip
-                label={isOverdue ? `${Math.abs(daysRemaining)} days overdue` : `${daysRemaining} days left`}
-                size="small"
-                sx={{
-                  backgroundColor: getStatusColor(status),
-                  color: 'white',
-                  fontWeight: 600,
-                }}
-              />
-            </Box>
+            {/* Dates */}
+            {assignment.dueDate && (
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
+                  DUE DATE
+                </Typography>
+                <Typography variant="body1">
+                  {format(new Date(assignment.dueDate), 'MMM dd, yyyy')}
+                </Typography>
+              </Box>
+            )}
 
             <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
+                POSTED
+              </Typography>
+              <Typography variant="body2">{format(new Date(assignment.createdAt), 'MMM dd, yyyy')}</Typography>
+            </Box>
+
+            <Box>
               <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
                 TEACHER
               </Typography>
@@ -170,26 +171,9 @@ export default function StudentAssignmentDetailPage() {
                 {assignment.teacher?.userId ? 'Assigned Teacher' : 'Admin'}
               </Typography>
             </Box>
-
-            <Divider sx={{ my: 3 }} />
-
-            {/* Created Date */}
-            <Box>
-              <Typography variant="subtitle2" sx={{ color: '#666', mb: 1, fontWeight: 600 }}>
-                POSTED
-              </Typography>
-              <Typography variant="body2">{format(new Date(assignment.createdAt), 'MMM dd, yyyy')}</Typography>
-            </Box>
           </DataCard>
         </Grid>
       </Grid>
-
-      {/* Action Bar */}
-      <Box sx={{ mt: 4, p: 2, backgroundColor: '#f5f5f5', borderRadius: '8px', textAlign: 'center' }}>
-        <Typography variant="body2" sx={{ color: '#666' }}>
-          {isOverdue ? '⚠️ This assignment is overdue' : '✓ You can still submit this assignment'}
-        </Typography>
-      </Box>
     </Box>
   )
 }

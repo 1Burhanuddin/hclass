@@ -307,7 +307,6 @@ export const updateAssignment = mutation({
     }
 
     if (args.dueDate !== undefined) {
-      if (args.dueDate <= Date.now()) throw new Error('Due date must be in the future')
       updateData.dueDate = args.dueDate
     }
 
