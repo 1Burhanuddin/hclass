@@ -161,6 +161,7 @@ export const createFees = mutation({
   args: {
     studentId: v.id('students'),
     totalFees: v.number(),
+    emiMonths: v.optional(v.number()),
   },
   async handler(ctx, args) {
     // Verify student exists
@@ -180,12 +181,17 @@ export const createFees = mutation({
     }
 
     // Create new fees record
+    const emiMonths = args.emiMonths || 12
+    const emiAmount = args.totalFees / emiMonths
+
     const feesId = await ctx.db.insert('fees', {
       studentId: args.studentId,
       totalFees: args.totalFees,
       paidAmount: 0,
       dueAmount: args.totalFees,
       status: 'due',
+      emiMonths: emiMonths,
+      emiAmount: emiAmount,
       paymentHistory: [],
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -242,11 +248,19 @@ export const recordFeePayment = mutation({
       note: args.note,
     }]
 
+    // Calculate remaining months for EMI (simplified: assume 1 month passed if lastPaymentDate was in a different month, or just use remaining tenure)
+    // For this demo, we'll just recalculate based on the remaining tenure
+    const emiMonths = currentFees.emiMonths || 12
+    const paidCount = (currentFees.paymentHistory || []).length + 1
+    const remainingMonths = Math.max(1, emiMonths - (paidCount - 1))
+    const newEmiAmount = newDueAmount / remainingMonths
+
     // Update fees record
     await ctx.db.patch(currentFees._id, {
       paidAmount: newPaidAmount,
       dueAmount: newDueAmount,
       status: newStatus,
+      emiAmount: newEmiAmount,
       lastPaymentDate: paymentDate,
       paymentHistory: newPaymentHistory,
       updatedAt: Date.now(),

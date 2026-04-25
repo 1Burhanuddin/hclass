@@ -23,7 +23,6 @@ export function AuthenticatedLayout({
         {signedOutContent || children}
       </SignedOut>
       <SignedIn>
-        {!isAdminRoute && <PageHeader title="Dashboard" />}
         <main>{children}</main>
       </SignedIn>
     </>

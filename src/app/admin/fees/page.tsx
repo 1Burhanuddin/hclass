@@ -167,6 +167,14 @@ export default function FeesPage() {
                 format: (value) => `₹${value.toLocaleString()}`,
               },
               {
+                id: 'emiAmount',
+                label: 'EMI/Month',
+                minWidth: 110,
+                align: 'right',
+                sortable: true,
+                format: (value) => value ? `₹${Math.round(value).toLocaleString()}` : '-',
+              },
+              {
                 id: 'status',
                 label: 'Status',
                 minWidth: 110,
@@ -212,6 +220,11 @@ export default function FeesPage() {
                   Total Fees: ₹{selectedFee.totalFees.toLocaleString()} | Paid: ₹{selectedFee.paidAmount.toLocaleString()}{' '}
                   | Due: ₹{selectedFee.dueAmount.toLocaleString()}
                 </Typography>
+                {selectedFee.emiAmount && (
+                  <Typography variant="body2" sx={{ mt: 1, fontWeight: 600, color: '#1976d2' }}>
+                    Monthly EMI: ₹{Math.round(selectedFee.emiAmount).toLocaleString()}
+                  </Typography>
+                )}
               </Box>
 
               <TextField

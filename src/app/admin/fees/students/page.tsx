@@ -32,6 +32,7 @@ export default function ManageStudentFeesPage() {
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [feeDialogOpen, setFeeDialogOpen] = useState(false);
   const [totalFeesAmount, setTotalFeesAmount] = useState('');
+  const [emiMonths, setEmiMonths] = useState('12');
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
@@ -95,8 +96,9 @@ export default function ManageStudentFeesPage() {
         showToast('Student fees updated successfully', 'success');
       } else {
         await createFeesMutation({
-          studentId: selectedStudent._id,
+          studentId: selectedStudent._id as any,
           totalFees: amount,
+          emiMonths: parseInt(emiMonths),
         });
         showToast('Student fees created successfully', 'success');
       }
@@ -283,11 +285,30 @@ export default function ManageStudentFeesPage() {
                 inputProps={{ step: '0.01', min: '1' }}
                 helperText="Enter the total fees amount for this student"
                 sx={{
+                  mb: 3,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '12px',
                   },
                 }}
               />
+
+              {!selectedStudent.fees && (
+                <TextField
+                  fullWidth
+                  label="EMI Tenure (Months)"
+                  type="number"
+                  value={emiMonths}
+                  onChange={(e) => setEmiMonths(e.target.value)}
+                  placeholder="12"
+                  inputProps={{ min: '1', max: '60' }}
+                  helperText="Default is 12 months EMI"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '12px',
+                    },
+                  }}
+                />
+              )}
             </>
           )}
         </DialogContent>

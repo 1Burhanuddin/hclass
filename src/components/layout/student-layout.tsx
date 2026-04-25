@@ -19,6 +19,7 @@ import {
 
 import { useState, ReactNode, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import { UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -39,7 +40,7 @@ const navigationItems = [
   { label: 'Analytics', icon: <AnalyticsIcon />, href: '/student/analytics' },
   { label: 'Grades', icon: <GradeIcon />, href: '/student/grades' },
   { label: 'Attendance', icon: <EventIcon />, href: '/student/attendance' },
-  { label: 'Assignments', icon: <AssignmentIcon />, href: '/student/assignments' },
+  { label: 'Study Material', icon: <AssignmentIcon />, href: '/student/assignments' },
   { label: 'Fees', icon: <ReceiptIcon />, href: '/student/fees' },
   { label: 'Notifications', icon: <NotificationsIcon />, href: '/student/notifications' },
 ];
@@ -324,6 +325,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
                   </MenuItem>
                 )}
               </Menu>
+              <UserButton afterSignOutUrl="/" />
             </Box>
           </Toolbar>
         </AppBar>

@@ -73,7 +73,7 @@ export default defineSchema({
     teacherId: v.id('teachers'),
     title: v.string(),
     description: v.string(),
-    dueDate: v.number(),
+    dueDate: v.optional(v.number()),
     attachmentUrl: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -100,7 +100,9 @@ export default defineSchema({
     totalFees: v.number(),
     paidAmount: v.number(),
     dueAmount: v.number(),
-    status: v.union(v.literal('paid'), v.literal('partial'), v.literal('due')),
+    status: v.string(), // paid, partial, due
+    emiMonths: v.optional(v.number()),
+    emiAmount: v.optional(v.number()),
     lastPaymentDate: v.optional(v.number()),
     paymentHistory: v.optional(
       v.array(

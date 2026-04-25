@@ -124,6 +124,18 @@ export default function FeesPage() {
             </Typography>
           </CardContent>
         </Card>
+        {fees.emiAmount && (
+          <Card sx={{ borderLeft: '4px solid #1976d2' }}>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                EMI/Month
+              </Typography>
+              <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 'bold' }}>
+                ₹{Math.round(fees.emiAmount).toLocaleString()}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
       </Box>
 
       {/* Status Section */}

@@ -232,7 +232,7 @@ export const createAssignment = mutation({
     teacherId: v.id('teachers'),
     title: v.string(),
     description: v.string(),
-    dueDate: v.number(),
+    dueDate: v.optional(v.number()),
     attachmentUrl: v.optional(v.string()),
   },
   async handler(ctx, args) {
@@ -250,11 +250,6 @@ export const createAssignment = mutation({
 
     if (batchSubject.teacherId.toString() !== args.teacherId.toString()) {
       throw new Error('Teacher does not teach this batch-subject')
-    }
-
-    // Validate due date is in future
-    if (args.dueDate <= Date.now()) {
-      throw new Error('Due date must be in the future')
     }
 
     // Validate title and description

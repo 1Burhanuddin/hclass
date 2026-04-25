@@ -107,8 +107,8 @@ export default function AssignmentsPage() {
   if (!isAuthorized) {
     return (
       <Box sx={{ p: 3 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>Assignments</Typography>
-        <Alert severity="warning">You don't have permission to manage assignments. Only admins and teachers can create assignments.</Alert>
+        <Typography variant="h4" sx={{ mb: 2 }}>Study Material</Typography>
+        <Alert severity="warning">You don't have permission to manage study material. Only admins and teachers can create study material.</Alert>
       </Box>
     )
   }
@@ -118,7 +118,7 @@ export default function AssignmentsPage() {
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h4">Assignments</Typography>
+            <Typography variant="h4">Study Material</Typography>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
@@ -147,7 +147,7 @@ export default function AssignmentsPage() {
           </Box>
         ) : assignments.length === 0 ? (
           <Typography sx={{ textAlign: 'center', color: '#999', p: 3 }}>
-            No assignments yet. Create your first assignment!
+            No study material yet. Create your first study material!
           </Typography>
         ) : (
           <TableContainer>
@@ -159,9 +159,6 @@ export default function AssignmentsPage() {
                   </TableCell>
                   <TableCell>
                     <strong>Batch-Subject</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>Due Date</strong>
                   </TableCell>
                   <TableCell>
                     <strong>Created</strong>

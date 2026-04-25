@@ -29,7 +29,6 @@ import { DataCard } from '@/components/ui'
 export default function StudentAssignmentsPage() {
   const router = useRouter()
   const { user } = useUser()
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'overdue' | 'upcoming'>('all')
   const [error, setError] = useState('')
 
   // Get user record
@@ -50,38 +49,9 @@ export default function StudentAssignmentsPage() {
     student ? { studentId: student._id } : 'skip'
   )
 
-  const getAssignmentStatus = (dueDate: number) => {
-    const now = Date.now()
-    if (dueDate < now) return 'overdue'
-    if (dueDate - now < 7 * 24 * 60 * 60 * 1000) return 'pending'
-    return 'upcoming'
-  }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'overdue':
-        return '#d32f2f'
-      case 'pending':
-        return '#f57c00'
-      case 'upcoming':
-        return '#388e3c'
-      default:
-        return '#1976d2'
-    }
-  }
 
-  const getStatusLabel = (dueDate: number) => {
-    const now = Date.now()
-    if (dueDate < now) {
-      return `Overdue - ${formatDistance(new Date(dueDate), now, { addSuffix: true })}`
-    }
-    return `Due in ${formatDistance(new Date(dueDate), now, { addSuffix: false })}`
-  }
-
-  const filteredAssignments =
-    !assignments || !filterStatus || filterStatus === 'all'
-      ? assignments
-      : assignments.filter((a: any) => getAssignmentStatus(a.dueDate) === filterStatus)
+  const filteredAssignments = assignments
 
   if (!user || !student || !assignments) {
     return (
@@ -94,7 +64,7 @@ export default function StudentAssignmentsPage() {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        My Assignments
+        Study Material
       </Typography>
 
       {error && (
@@ -103,28 +73,12 @@ export default function StudentAssignmentsPage() {
         </Alert>
       )}
 
-      {/* Filter Bar */}
-      <Box sx={{ mb: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {['all', 'pending', 'overdue', 'upcoming'].map((status) => (
-          <Chip
-            key={status}
-            label={status.charAt(0).toUpperCase() + status.slice(1)}
-            onClick={() => setFilterStatus(status as any)}
-            variant={filterStatus === status ? 'filled' : 'outlined'}
-            sx={{
-              backgroundColor: filterStatus === status ? '#1976d2' : 'transparent',
-              color: filterStatus === status ? 'white' : '#1976d2',
-              cursor: 'pointer',
-            }}
-          />
-        ))}
-      </Box>
+
 
       {/* Assignments Grid */}
       {filteredAssignments && filteredAssignments.length > 0 ? (
         <Grid container spacing={2}>
           {filteredAssignments.map((assignment: any) => {
-            const status = getAssignmentStatus(assignment.dueDate)
             return (
               <Grid item xs={12} sm={6} md={4} key={assignment._id}>
                 <Card
@@ -138,7 +92,7 @@ export default function StudentAssignmentsPage() {
                       transform: 'translateY(-4px)',
                       boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
                     },
-                    borderLeft: `4px solid ${getStatusColor(status)}`,
+                    borderLeft: `1px solid #eee`,
                   }}
                   onClick={() => {
                     NProgress.start()
@@ -156,17 +110,11 @@ export default function StudentAssignmentsPage() {
                       {assignment.subject?.name} • {assignment.batch?.name}
                     </Typography>
 
-                    {/* Status Badge */}
+                    {/* Posted Date */}
                     <Box sx={{ mb: 2 }}>
-                      <Chip
-                        label={getStatusLabel(assignment.dueDate)}
-                        size="small"
-                        sx={{
-                          backgroundColor: getStatusColor(status),
-                          color: 'white',
-                          fontWeight: 500,
-                        }}
-                      />
+                      <Typography variant="body2" sx={{ color: '#666', fontSize: '0.85rem' }}>
+                        Posted on: {format(new Date(assignment.createdAt), 'MMM dd, yyyy')}
+                      </Typography>
                     </Box>
 
                     {/* Teacher */}
@@ -199,7 +147,7 @@ export default function StudentAssignmentsPage() {
       ) : (
         <DataCard>
           <Typography sx={{ textAlign: 'center', color: '#999', py: 4 }}>
-            No assignments yet. Check back later!
+            No study material available yet. Check back later!
           </Typography>
         </DataCard>
       )}

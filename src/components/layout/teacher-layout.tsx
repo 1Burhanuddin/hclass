@@ -18,6 +18,7 @@ import {
 
 import { useState, ReactNode, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import MenuIcon from '@mui/icons-material/Menu'
 import HomeIcon from '@mui/icons-material/Home'
@@ -34,7 +35,7 @@ interface TeacherLayoutProps {
 const navigationItems = [
   { label: 'Dashboard', icon: <HomeIcon />, href: '/teacher' },
   { label: 'Attendance', icon: <EventIcon />, href: '/teacher/attendance' },
-  { label: 'Assignments', icon: <AssignmentIcon />, href: '/admin/assignments' },
+  { label: 'Study Material', icon: <AssignmentIcon />, href: '/admin/assignments' },
   { label: 'Notifications', icon: <NotificationsIcon />, href: '/teacher/notifications' },
   { label: 'Grades', icon: <GradeIcon />, href: '/teacher/grades' },
 ]
@@ -258,6 +259,7 @@ export function TeacherLayout({ children }: TeacherLayoutProps) {
                   </MenuItem>
                 )}
               </Menu>
+              <UserButton afterSignOutUrl="/" />
             </Box>
           </Toolbar>
         </AppBar>

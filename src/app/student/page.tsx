@@ -89,11 +89,11 @@ export default function StudentDashboard() {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Pending Assignments
+                   <Typography color="textSecondary" gutterBottom>
+                    Study Material Items
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                    {studentAssignments?.filter((a: any) => a.status !== 'submitted').length || 0}
+                    {studentAssignments?.length || 0}
                   </Typography>
                 </Box>
                 <AssignmentIcon sx={{ fontSize: 40, color: '#1976d2', opacity: 0.3 }} />
@@ -164,7 +164,7 @@ export default function StudentDashboard() {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Recent Assignments
+                  Recent Study Material
                 </Typography>
                 <Button size="small" component={Link} href="/student/assignments">
                   View All
@@ -177,9 +177,8 @@ export default function StudentDashboard() {
                     <TableHead>
                       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
                         <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
                         <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                          Due
+                          Posted
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -187,15 +186,8 @@ export default function StudentDashboard() {
                       {studentAssignments.slice(0, 3).map((assignment: any) => (
                         <TableRow key={assignment._id} hover>
                           <TableCell>{assignment.title}</TableCell>
-                          <TableCell>
-                            <Chip
-                              label={assignment.status ? assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1) : 'Pending'}
-                              size="small"
-                              color={assignment.status === 'submitted' ? 'success' : 'default'}
-                            />
-                          </TableCell>
                           <TableCell align="right">
-                            {assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : '-'}
+                            {format(new Date(assignment.createdAt), 'MMM dd, yyyy')}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -204,7 +196,7 @@ export default function StudentDashboard() {
                 </TableContainer>
               ) : (
                 <Typography color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
-                  No assignments assigned yet.
+                  No study material available yet.
                 </Typography>
               )}
             </CardContent>

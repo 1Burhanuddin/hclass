@@ -14,6 +14,7 @@ import type * as batchSubjects from "../batchSubjects.js";
 import type * as batches from "../batches.js";
 import type * as cleanupDuplicateUsers from "../cleanupDuplicateUsers.js";
 import type * as fees from "../fees.js";
+import type * as files from "../files.js";
 import type * as grades from "../grades.js";
 import type * as notifications from "../notifications.js";
 import type * as predefinedSubjects from "../predefinedSubjects.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   batches: typeof batches;
   cleanupDuplicateUsers: typeof cleanupDuplicateUsers;
   fees: typeof fees;
+  files: typeof files;
   grades: typeof grades;
   notifications: typeof notifications;
   predefinedSubjects: typeof predefinedSubjects;

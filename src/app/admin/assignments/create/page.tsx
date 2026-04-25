@@ -37,8 +37,6 @@ export default function CreateAssignmentPage() {
     subjectId: '',
     title: '',
     description: '',
-    dueDate: format(addDays(new Date(), 7), 'yyyy-MM-dd'),
-    attachmentUrl: '',
   })
 
   // Get teacher record
@@ -138,14 +136,11 @@ export default function CreateAssignmentPage() {
     }
 
     try {
-      const dueDateTime = new Date(formData.dueDate).getTime()
-
       await createAssignmentMutation({
         batchSubjectId: batchSubjectId as any,
         teacherId: applicableTeacherId as any,
         title: formData.title,
         description: formData.description,
-        dueDate: dueDateTime,
         attachmentUrl: attachmentFile ? attachmentFile.name : undefined,
       })
 
@@ -172,8 +167,8 @@ export default function CreateAssignmentPage() {
   if (!isAuthorized) {
     return (
       <Box sx={{ p: 3 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>Create Assignment</Typography>
-        <Alert severity="warning">You don't have permission to create assignments. Only admins and teachers can create assignments.</Alert>
+        <Typography variant="h4" sx={{ mb: 2 }}>Create Study Material</Typography>
+        <Alert severity="warning">You don't have permission to create study material. Only admins and teachers can create study materials.</Alert>
       </Box>
     )
   }

@@ -27,6 +27,9 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SchoolIcon from '@mui/icons-material/School';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import Link from 'next/link';
 
 interface TabPanelProps {
@@ -107,8 +110,8 @@ export default function StudentAnalyticsDashboard() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-          📊 Analytics Dashboard
+        <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <AnalyticsIcon fontSize="large" color="primary" /> Analytics Dashboard
         </Typography>
         <Typography variant="body2" color="textSecondary">
           Track your academic performance, attendance, and get personalized insights
@@ -200,10 +203,10 @@ export default function StudentAnalyticsDashboard() {
           onChange={(e, val) => setTabValue(val)}
           sx={{ borderBottom: '1px solid #f0f0f0' }}
         >
-          <Tab label="📚 Subject Performance" />
-          <Tab label="✅ Attendance Overview" />
-          <Tab label="💡 Study Recommendations" />
-          <Tab label="📈 Performance History" />
+          <Tab icon={<SchoolIcon />} iconPosition="start" label="Subject Performance" />
+          <Tab icon={<CheckCircleIcon />} iconPosition="start" label="Attendance Overview" />
+          <Tab icon={<TipsAndUpdatesIcon />} iconPosition="start" label="Study Recommendations" />
+          <Tab icon={<TrendingUpIcon />} iconPosition="start" label="Performance History" />
         </Tabs>
 
         {/* Subject Performance Tab */}
@@ -482,23 +485,23 @@ export default function StudentAnalyticsDashboard() {
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Button fullWidth variant="outlined" component={Link} href="/student/grades" sx={{ py: 1.5 }}>
-            📊 View Grades
+          <Button fullWidth variant="outlined" component={Link} href="/student/grades" startIcon={<GradeIcon />} sx={{ py: 1.5 }}>
+            View Grades
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Button fullWidth variant="outlined" component={Link} href="/student/attendance" sx={{ py: 1.5 }}>
-            ✓ Attendance
+          <Button fullWidth variant="outlined" component={Link} href="/student/attendance" startIcon={<CheckCircleIcon />} sx={{ py: 1.5 }}>
+            Attendance
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Button fullWidth variant="outlined" component={Link} href="/student/assignments" sx={{ py: 1.5 }}>
-            📝 Assignments
+          <Button fullWidth variant="outlined" component={Link} href="/student/assignments" startIcon={<AssignmentIcon />} sx={{ py: 1.5 }}>
+            Study Material
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Button fullWidth variant="outlined" component={Link} href="/student/fees" sx={{ py: 1.5 }}>
-            💰 Fees
+          <Button fullWidth variant="outlined" component={Link} href="/student/fees" startIcon={<ReceiptIcon />} sx={{ py: 1.5 }}>
+            Fees
           </Button>
         </Grid>
       </Grid>
